@@ -1,5 +1,5 @@
 # MedChain
-Healthcare Record System Mobile APP using blockchain, IPFS and React Native
+A mobile application built to store patient health records using blockchain, IPFS and React Native
 
 
 |  |   | |
@@ -58,7 +58,7 @@ The frontend of mobile application is developed using react native that will hel
 ## Storage of Health Records
 ---
 
-Doctors can add the health records of the patient. For this we use IPFS as to store a large amount of data on Blockchain can be very energy consuming.
+Doctors can add the health records of the patient. For this we use IPFS as storing a large amount of data on Blockchain can be very energy consuming.
 
 When the doctor adds the health record of a patient, the data is encrypted with the public key of the patient and is stored on the IPFS. After that the hash of the file is stored in the smart contract. Later the patient can view his health records by getting the hash of the file from IPFS and decrypting the data of the file with his private key.
 
@@ -208,5 +208,3 @@ Run node server using follwing command:
 ```
 nodemon app.js
 ```
-
-

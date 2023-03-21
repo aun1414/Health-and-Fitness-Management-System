@@ -3,13 +3,15 @@ import { ScrollView, View, StyleSheet, ImageBackground, BackHandler } from 'reac
 import { Card, Title, Surface} from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
-
+import GoogleFit, { Scopes } from 'react-native-google-fit'
 
 
 const Vitals = () => {
 
   const [elements, setElements] = React.useState([]);
   const navigation = useNavigation();
+
+ 
 
   React.useEffect(() => {
     getElements();
@@ -19,19 +21,29 @@ const Vitals = () => {
     };
     const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
     return () => backHandler.remove();
+
+  
+
   }, [])
 
+  
 
   function getElements() {
     var elementsArr = [
-      { key: 1, name: 'Blood Pressure', uri: require('../../images/bloodpressure.png') },
-      { key: 2, name: 'Pulse Rate', uri: require('../../images/pulserate.png') },
-      { key: 3, name: 'Temperature', uri: require('../../images/temperature.png') },
-      { key: 4, name: 'IoT Devices', uri: require('../../images/iot.png') },
+      { key: 1, name: 'Blood Pressure', uri: require('../../images/bloodpressure.png'), click: 'BloodPressure' },
+      { key: 2, name: 'Heart Rate', uri: require('../../images/pulserate.png'), click: 'HeartRate' },
+      { key: 3, name: 'Temperature', uri: require('../../images/temperature.png'), click: 'Temperature' },
+      { key: 4, name: 'Connection', uri: require('../../images/iot.png'), click: 'Connection' },
     ]
     setElements(elementsArr);
 
   }
+
+  const navigateTo = (link) =>{
+    navigation.navigate(link);
+  }
+
+
 
   return (
     <View style={styles.container}>
@@ -53,7 +65,8 @@ const Vitals = () => {
                   elevation={5}>
                   <Card
                     style={styles.maincard}
-                    mode='contained'>
+                    mode='contained'
+                    onPress={() => navigateTo(element.click)}>
 
                     <Card.Content
                       style={{

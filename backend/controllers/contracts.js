@@ -4,6 +4,7 @@ const { sendError } = require('../utils/helper');
 
 //adding new doctor to the contract
 exports.addDoctor = async (req, res) => {
+    try{
     if (typeof web3 !== 'undefined') {
         var web3 = new Web3(web3.currentProvider); 
     } else {
@@ -21,9 +22,14 @@ exports.addDoctor = async (req, res) => {
 
     res.json({success: true})
 }
+catch (error) {
+    resp.json({success: false})
+}
+}
 
 //adding new patient to the contract
 exports.addPatient = async (req, res) => {
+    try{
     if (typeof web3 !== 'undefined') {
         var web3 = new Web3(web3.currentProvider); 
     } else {
@@ -44,9 +50,14 @@ exports.addPatient = async (req, res) => {
 
     res.json({success: true})
 }
+catch (error) {
+    resp.json({success: false})
+}
+}
 
 //signin doctor usinsg roles contract
 exports.signinDoctor = async (req, res) => {
+    try{
     if (typeof web3 !== 'undefined') {
         var web3 = new Web3(web3.currentProvider); 
     } else {
@@ -70,11 +81,15 @@ exports.signinDoctor = async (req, res) => {
             return sendError(res, "Id not registered");
         }
     })
-    
+}
+catch (error) {
+    resp.json({success: false})
+}
 }
 
 //signin patient using roles contract
 exports.signinPatient = async (req, res) => {
+    try{
     if (typeof web3 !== 'undefined') {
         var web3 = new Web3(web3.currentProvider); 
     } else {
@@ -99,11 +114,15 @@ exports.signinPatient = async (req, res) => {
             return sendError(res, "Id not registered");
         }
     })
-    
+}
+catch (error) {
+    resp.json({success: false})
+}
 }
 
 //upload file to ipfs and permission contract
 exports.uploadFile = async (req, res) => {
+    try{
     if (typeof web3 !== 'undefined') {
         var web3 = new Web3(web3.currentProvider); 
     } else {
@@ -118,9 +137,14 @@ exports.uploadFile = async (req, res) => {
     await ipfsContract.methods.setFile(hash, patientid, fileType, doctorid).send({from: doctorid, gas:900000})
     res.json({success: true})
 }
+catch (error) {
+    resp.json({success: false})
+}
+}
 
 //get all file hashes of a patient from contracts having certain type
 exports.getAllFilesByPatientandType = async (req, resp) => {
+    try{
     if (typeof web3 !== 'undefined') {
         var web3 = new Web3(web3.currentProvider); 
     } else {
@@ -161,9 +185,14 @@ exports.getAllFilesByPatientandType = async (req, resp) => {
     
     })
 }
+catch (error) {
+    resp.json({success: false})
+}
+}
 
 //get all file hashes of a patient from contracts
 exports.getAllFilesByPatient = async (req, resp) => {
+    try{
     if (typeof web3 !== 'undefined') {
         var web3 = new Web3(web3.currentProvider); 
     } else {
@@ -189,6 +218,11 @@ exports.getAllFilesByPatient = async (req, resp) => {
 
     
     })
+
+}
+catch (error) {
+    resp.json({success: false})
+}
 
 
 }

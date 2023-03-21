@@ -1,109 +1,104 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet, ImageBackground, BackHandler } from 'react-native';
-import { Card, Title, Surface } from 'react-native-paper';
+import { Card, Title, Surface, Text} from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
+import GoogleFit, { Scopes } from 'react-native-google-fit'
 
 
+const TemperatureData = ({ route }) => {
 
-const Exercise = () => {
-
-  const navigation = useNavigation();
   const [elements, setElements] = React.useState([]);
+  const navigation = useNavigation();
+  const [date, setDate] = React.useState("")
+ 
 
   React.useEffect(() => {
-    getElements();
+    setElements(route.params.element);
+    setDate(route.params.date)
     const backAction = () => {
       navigation.goBack();
       return true;
-
-
     };
     const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
     return () => backHandler.remove();
+
+  
+
   }, [])
 
+  
 
+  
 
-
-  React.useEffect(() => { getElements(); }, [])
-
-  function getElements() {
-    var elementsArr = [
-      { key: 1, name: 'Daily Steps', uri: require('../../images/walking.png'), click: 'DailyStep' },
-      { key: 2, name: 'Connection', uri: require('../../images/iot.png') , click: 'Connection'},
-    ]
-    setElements(elementsArr);
-
-
-  }
-
-  const navigateTo = (link) =>{
-    navigation.navigate(link);
-  }
-
-
+  
 
   return (
     <View style={styles.container}>
-      <BackAppBar message={"Exercise"} />
+      <BackAppBar message={date} />
       <ImageBackground
         source={require('../../images/appBack.jpg')}
         resizeMode="cover"
         style={{ height: '100%' }}>
-        <ScrollView >
+
+        <ScrollView>
 
           <View style={styles.rows}>
             {
               elements.map(element => (
 
                 <Surface
-                  key={element.key}
+                  key={element.endDate}
                   style={styles.card}
-                  elevation={5}>
+                  elevation={3}>
                   <Card
                     style={styles.maincard}
                     mode='contained'
-                    onPress={() => navigateTo(element.click)}>
+                    >
 
                     <Card.Content
                       style={{
                         flex: 1,
-                        flexDirection: 'row'
                       }}>
 
-                      <View style={{ width: 60, height: 60 }}>
-                        <Card.Cover
-                          source={element.uri}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            resizeMode: "contain",
-                            alignSelf: "center",
-                            backgroundColor: 'transparent'
-                          }} />
+                      <View>
+                      <Text
+                      variant='bodyLarge'
+                        style={{
+                          color: 'black',
+                          marginStart: 10
+                        }}>
+                        {new Date(element.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </Text>
+
                       </View>
 
-                      <Title
+                     
+                    
+
+                      <Text
+                      variant='bodyLarge'
                         style={{
-                          color: 'cornflowerblue',
-                          marginVertical: 15,
-                          marginStart: 15
-                        }} >
-                        {element.name}
-                      </Title>
+                          color: 'black',
+                        fontWeight: 'bold',
+                        marginStart: 10
+                        }}>
+                        {element.value} °C
+                      </Text>
                       
                     </Card.Content>
                   </Card>
+
                 </Surface>
 
               ))
             }
 
           </View>
-
         </ScrollView>
+
       </ImageBackground>
+
     </View>
   );
 
@@ -116,11 +111,10 @@ const styles = StyleSheet.create({
   },
   rows: {
     marginTop: 80
-
   },
   card: {
     width: '90%',
-    height: 90,
+    height: 70,
     margin: '5%',
     borderRadius: 20,
     textAlign: 'center'
@@ -133,7 +127,6 @@ const styles = StyleSheet.create({
 
   },
 
-
 });
 
-export default Exercise;
+export default TemperatureData;

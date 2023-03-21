@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   },
   bordered1: {
     borderColor: 'lightgray',
-    minHeight: 60,
+    minHeight: 95,
     borderWidth: 1,
     justifyContent: 'center',
     backgroundColor: 'white',

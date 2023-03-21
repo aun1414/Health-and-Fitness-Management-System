@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   bordered1: {
     borderColor: 'lightgray',
-    minHeight: 130,
+    minHeight: 150,
     borderWidth: 1,
     justifyContent: 'center',
     backgroundColor: 'white',

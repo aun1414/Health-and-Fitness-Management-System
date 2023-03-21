@@ -36,7 +36,7 @@ const ProfilePatient = () => {
   React.useEffect(()=>{
     start()
   },
-  [patientName])
+  [gender])
 
   //get account information of patient from database
   const start = async() =>{

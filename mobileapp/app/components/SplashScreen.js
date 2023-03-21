@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
     image: {
         marginLeft: 'auto',
         marginRight: 'auto',
-        width: 250,
-        height: 250,
+        width: 200,
+        height: 200,
     },
    
 });

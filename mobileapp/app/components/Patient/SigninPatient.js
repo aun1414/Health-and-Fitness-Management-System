@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, ImageBackground, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, Text, ImageBackground, ScrollView, BackHandler } from 'react-native';
 import { TextInput, Button, Provider, Modal, Portal } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { HTTP_CLIENT_URL } from '../../url';
@@ -10,15 +10,25 @@ const SigninPatient = () => {
     //declare state variables
     const navigation = useNavigation();
 
-    const [addressid, setAddressid] = React.useState("");
+    const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [modalVisible, setModalVisible] = React.useState(false);
     const [result, setResult] = React.useState("");
 
+    React.useEffect(() => {
+
+        const backAction = () => {
+          navigation.goBack();
+          return true;
+        };
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+        return () => backHandler.remove();
+      }, [])
+
     //signin patient by matching account id and password with database
     const signin = () => {
-        if(addressid.trim()===''){
-            setResult("Address Id is required");
+        if(email.trim()===''){
+            setResult("Email Id is required");
             setModalVisible(true);
         }
         else if(password.trim()===''){
@@ -31,7 +41,7 @@ const SigninPatient = () => {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ addressid, password  }),
+                body: JSON.stringify({ email, password  }),
               }).then(async res => {
                 //On Sucessufully returning from API collect response
                 const d = await res.json();
@@ -45,7 +55,7 @@ const SigninPatient = () => {
                     headers: {
                       'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ addressid }),
+                    body: JSON.stringify({ addressid: d.patient.addressid }),
                   }).then(async res => {
                     //On Sucessufully returning from API collect response
                     const d1 = await res.json();
@@ -145,9 +155,9 @@ const SigninPatient = () => {
                 />
 
                 <TextInput
-                    label="Adress id"
-                    value={addressid}
-                    onChangeText={addressid => setAddressid(addressid)}
+                    label="Email id"
+                    value={email}
+                    onChangeText={email => setEmail(email)}
                     style={styles.textfield}
                     keyboardType='default'
                 />

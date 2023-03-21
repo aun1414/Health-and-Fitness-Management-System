@@ -1,12 +1,12 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Image, BackHandler, ImageBackground } from 'react-native';
+import { ScrollView, View, StyleSheet, Image, BackHandler, ImageBackground, TouchableOpacity } from 'react-native';
 import { Text, Portal, TextInput, Provider, Modal, Button } from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
 import '../../file';
 import { HTTP_CLIENT_URL } from '../../url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import DatePicker from 'react-native-date-picker';
 
 
 
@@ -23,7 +23,8 @@ const AddMedications = () => {
   const [diagnosis, setDiagnosis] = React.useState("");
   const [dosage, setDosage] = React.useState("");
   const [dateInput, setDateInput] = React.useState("");
-  const [date, setDate] = React.useState("");
+  const [date, setDate] = React.useState(new Date());
+  const [open, setOpen] = React.useState(false)
 
   //function to be called on pressing add button
   async function add() {
@@ -47,7 +48,7 @@ const AddMedications = () => {
         const doctorid=await AsyncStorage.getItem('addressid');
 
        
-        const dataToEncrypt={file: 'Medication', patient: patient, doctor: doctorid, medicine, dosage, days, diagnosis, date }
+        const dataToEncrypt={file: 'Medication', patient: patient, doctor: doctorid, medicine, dosage, days, diagnosis, date: date.toLocaleString() }
 
         fetch(`${HTTP_CLIENT_URL}/rsa/encrypt`, {
           method: 'POST',
@@ -242,12 +243,28 @@ const AddMedications = () => {
               style={styles.textfield}
             />
 
-          <TextInput
+<TouchableOpacity
+            onPress={() => setOpen(true)}>
+            <TextInput
               label="Date"
-              value={date}
-              onChangeText={text => setDate(text)}
+              value={date.toLocaleString()}
               style={styles.textfield}
+            editable={false}
             />
+            
+            </TouchableOpacity>
+            <DatePicker
+                    modal
+                    open={open}
+                    date={date}
+                    onConfirm={(date) => {
+                    setOpen(false)
+                    setDate(date)
+                    }}
+                    onCancel={() => {
+                    setOpen(false)
+                    }}
+                />
 
 
             <Button buttonColor='royalblue' style={styles.button} mode="contained" onPress={add}>

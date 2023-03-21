@@ -76,17 +76,17 @@ exports.createPatient = async (req, res) => {
 
 //sign in a patient from database
 exports.signin = async (req, res) => {
-    const { addressid, password } = req.body
+    const { email, password } = req.body
 
-    if (!addressid.trim() || !password.trim()) {
-        return sendError(res, "Id/Password is required");
+    if (!email.trim() || !password.trim()) {
+        return sendError(res, "Email/Password is required");
 
     }
     else{
-        const patient = await Patient.findOne({addressid});
+        const patient = await Patient.findOne({email});
 
         if(!patient){
-            return sendError(res, "Patient id not registered");
+            return sendError(res, "Patient Email not registered");
         }
         else{
             const foundPatient = await patient.comparePassword(password);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, ImageBackground, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, Text, ImageBackground, ScrollView, BackHandler } from 'react-native';
 import { TextInput, Button, Provider, Portal, Modal } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { HTTP_CLIENT_URL } from '../../url';
@@ -10,7 +10,7 @@ const SigninDoctor = () => {
 
     //declare state variables  
     const navigation = useNavigation();
-    const [addressid, setAddressid] = React.useState("");
+    const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [modalVisible, setModalVisible] = React.useState(false);
     const [result, setResult] = React.useState("");
@@ -21,8 +21,8 @@ const SigninDoctor = () => {
         // console.log('Sign in')
         // navigation.navigate('MainDoctor');
 
-        if(addressid.trim()===''){
-            setResult("Address Id is required");
+        if(email.trim()===''){
+            setResult("Email Id is required");
             setModalVisible(true);
         }
         else if(password.trim()===''){
@@ -35,7 +35,7 @@ const SigninDoctor = () => {
                 headers: {
                   'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ addressid, password  }),
+                body: JSON.stringify({ email, password  }),
               }).then(async res => {
                 //On Sucessufully returning from API collect response
                 const d = await res.json();
@@ -51,7 +51,7 @@ const SigninDoctor = () => {
                     headers: {
                       'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ addressid }),
+                    body: JSON.stringify({ addressid: d.doctor.addressid }),
                   }).then(async res => {
                     //On Sucessufully returning from API collect response
                     const d1 = await res.json();
@@ -108,6 +108,16 @@ const SigninDoctor = () => {
 
     }
 
+    React.useEffect(() => {
+
+      const backAction = () => {
+        navigation.goBack();
+        return true;
+      };
+      const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+      return () => backHandler.remove();
+    }, [])
+
 
     return (
         <Provider>
@@ -146,9 +156,9 @@ const SigninDoctor = () => {
                     style={styles.image}
                 />
                 <TextInput
-                    label="Address Id"
-                    value={addressid}
-                    onChangeText={addressid => setAddressid(addressid)}
+                    label="Email Id"
+                    value={email}
+                    onChangeText={email => setEmail(email)}
                     style={styles.textfield}
                     keyboardType='default'
                 />

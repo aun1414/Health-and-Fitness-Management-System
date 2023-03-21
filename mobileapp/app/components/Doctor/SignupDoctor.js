@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text, ImageBackground, ScrollView } from 'react-native';
+import { View, StyleSheet, Image, Text, ImageBackground, ScrollView, BackHandler } from 'react-native';
 import { TextInput, Button,Provider, Modal, Portal } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { HTTP_CLIENT_URL } from '../../url';
@@ -122,6 +122,16 @@ const SignupDoctor = () => {
     setModalVisible(false);
     
   }
+
+  React.useEffect(() => {
+
+    const backAction = () => {
+      navigation.goBack();
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
+    return () => backHandler.remove();
+  }, [])
 
 
     return (

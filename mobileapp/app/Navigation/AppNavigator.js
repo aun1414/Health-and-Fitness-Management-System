@@ -26,6 +26,14 @@ import Key from '../components/Key';
 import InputKey from '../components/InputKey';
 import { useNavigation } from '@react-navigation/native';
 import SplashScreen from '../components/SplashScreen';
+import Connection from '../components/Patient/Connection';
+import HeartRate from '../components/Patient/HeartRate';
+import BloodPressure from '../components/Patient/BloodPressure';
+import Temperature from '../components/Patient/Temperature';
+import HeartRateData from '../components/Patient/HeartRateData';
+import BloodPressureData from '../components/Patient/BloodPressureData';
+import TemperatureData from '../components/Patient/TemperatureData';
+import DailyStep from '../components/Patient/DailyStep';
 
 
 
@@ -66,10 +74,14 @@ const AppNavigator = () => {
     <Stack.Screen name='LabResultInfo' component={LabResultsInfo} />
     <Stack.Screen name='Key' component={Key} />
     <Stack.Screen name='InputKey' component={InputKey} />
-   
-
-
-
+    <Stack.Screen name='Connection' component={Connection} />
+    <Stack.Screen name='HeartRate' component={HeartRate} />
+    <Stack.Screen name='BloodPressure' component={BloodPressure} />
+    <Stack.Screen name='Temperature' component={Temperature} />
+    <Stack.Screen name='HeartRateData' component={HeartRateData} />
+    <Stack.Screen name='BloodPressureData' component={BloodPressureData} />
+    <Stack.Screen name='TemperatureData' component={TemperatureData} />
+    <Stack.Screen name='DailyStep' component={DailyStep} />
 
    </Stack.Navigator>
 

@@ -53,7 +53,7 @@ const HomePatient = () => {
       { key: 2, name: 'Doctor Notes', uri: require('../../images/doctorNote.jpg'), click: 'DoctorNotesPatient' },
       { key: 3, name: 'Lab Results', uri: require('../../images/labResult.jpg'), click: 'LabResultsPatient' },
       { key: 4, name: 'Vital Signs', uri: require('../../images/vital.jpg'), click: 'Vitals' },
-      { key: 5, name: 'Exercise', uri: require('../../images/running.jpg'), click: 'Exercise' }
+      { key: 5, name: 'Activity', uri: require('../../images/running.jpg'), click: 'Exercise' }
     ]
     setElements(elementsArr);
 

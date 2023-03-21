@@ -80,16 +80,16 @@ exports.createDoctor = async (req, res) => {
 
 //signin a doctor from database
 exports.signin = async (req, res) => {
-    const { addressid, password } = req.body
+    const { email, password } = req.body
 
     
 
-    if (!addressid.trim() || !password.trim()) {
-        return sendError(res, "Id/Password is required");
+    if (!email.trim() || !password.trim()) {
+        return sendError(res, "Email/Password is required");
 
     }
     else{
-        const doctor = await Doctor.findOne({addressid});
+        const doctor = await Doctor.findOne({email});
 
         if(!doctor){
             return sendError(res, "Doctor id not registered");

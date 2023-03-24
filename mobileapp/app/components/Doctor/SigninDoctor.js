@@ -79,7 +79,7 @@ const SigninDoctor = () => {
                     }
                     else {
 
-                      setResult(d1.error);
+                      setResult("Error!");
                       setModalVisible(true);
                   }
                   });

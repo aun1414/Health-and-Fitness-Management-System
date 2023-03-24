@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BackHandler, StyleSheet, TouchableOpacity, View, ScrollView, ImageBackground, Text, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { TextInput, Button } from 'react-native-paper';
+import { TextInput, Button, Portal, Provider, Modal } from 'react-native-paper';
 import { HTTP_CLIENT_URL } from '../../url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -10,6 +10,9 @@ const GrantPermissionPatient = ({ route }) => {
     const navigation = useNavigation();
     const [doctor, setDoctor] = React.useState();
     const [key, setKey] = React.useState();
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalMsg, setModalMsg] = React.useState("");
+    const [open, setOpen] = React.useState(false)
 
     React.useEffect(() => {
         //what to do when back button is pressed
@@ -157,18 +160,24 @@ const GrantPermissionPatient = ({ route }) => {
                         }
                         else{
                             console.log("Error Reencrypting")
+                            setModalMsg("Error Reencrypting");
+                            setModalVisible(true);
                         }
                       });
 
                     }
                     else{
                         console.log("Error getting File from IPFS")
+                        setModalMsg("Error getting File from IPFS");
+                            setModalVisible(true);
                     }
                   });
 
 
             } else{
                 console.log(d1);
+                setModalMsg("Doctor doesnot exist");
+                            setModalVisible(true);
 
             }
         });
@@ -176,9 +185,41 @@ const GrantPermissionPatient = ({ route }) => {
         
 
       }
+    //function to be called on closing modal displaying doctor note is added
+    const ok = () => {
+      //making ModalVisible false to hide the modal that doctor note is added
+      setModalVisible(false);
+      
+      
+    }
 
 
     return (
+      <Provider>
+      <Portal>
+        <Modal
+          visible={modalVisible}
+          onDismiss={ok}
+          contentContainerStyle={styles.modalAge}>
+          <View>
+
+            <Text
+              style={{ margin: 10, textAlign: 'center' }}>
+              {modalMsg}
+            </Text>
+
+            <Button
+              mode='contained'
+              buttonColor='#00ced1'
+              style={styles.okbutton}
+              onPress={ok}>
+              Ok
+            </Button>
+
+          </View>
+   
+        </Modal>
+      </Portal>
         <View style={styles.container}>
 
             <ImageBackground
@@ -236,28 +277,14 @@ const GrantPermissionPatient = ({ route }) => {
                         </Text>
                     </Button>
 
-                    <Text
-                        style={{
-                            textAlign: 'center',
-                            color: 'white'
-                        }}>
-                        OR
-                    </Text>
-
-                    <Button
-                        buttonColor='royalblue'
-                        style={styles.button}
-                        mode="contained"
-                        onPress={() => navigation.goBack()}>
-                        <Text>
-                            Back
-                        </Text>
-                    </Button>
+                   
+                   
                     
                 </ScrollView>
             </ImageBackground>
 
         </View>
+        </Provider>
     );
 
 };
@@ -299,7 +326,20 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
 
-    }
+    },
+    modalAge: {
+      backgroundColor: 'white',
+      width: '90%',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      padding: 20,
+      borderRadius: 10
+  
+    },
+    okbutton: {
+      margin: 10,
+  
+    },
 });
 
 

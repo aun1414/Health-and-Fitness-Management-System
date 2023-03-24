@@ -60,7 +60,8 @@ const Connection = () => {
   }, [fitAuthorized])
 
 
-  const connect = () =>{
+  const connect = async () =>{
+    console.log("Connecting....")
     GoogleFit.authorize(options)
     .then(authResult => {
       console.log(authResult)
@@ -82,6 +83,8 @@ const Connection = () => {
         setModalVisible(true)
       // dispatch('AUTH_ERROR');
     });
+    
+    console.log("done")
   }
 
   const disconnect =() =>{

@@ -4,6 +4,7 @@ const PRE = require('recrypt-js')
 const Patient = require('../models/patient');
 const counter= require('../counter')
 const Web3=require('web3')
+const DoctorProfile = require('../models/doctorprofile')
 
 //create a new doctor in database
 exports.createDoctor = async (req, res) => {
@@ -68,7 +69,11 @@ exports.createDoctor = async (req, res) => {
             })
         
             await newDoctor.save();
-            console.log(publickey)
+            const doctorProfile = new DoctorProfile({
+                doctor: newDoctor
+            })
+            await doctorProfile.save();
+            
             res.status(200).json({success: true, doctor: newDoctor, key: privatekey })
             
         }

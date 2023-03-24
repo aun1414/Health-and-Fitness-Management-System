@@ -65,7 +65,7 @@ const Key = ({ route }) => {
                     style={styles.button}
                     mode="contained"
                     onPress={done}>
-                    <Text>Done</Text>
+                    <Text style={{color: 'white'}}>Done</Text>
                 </Button>
       
         </ScrollView>

@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 
-const PatientProfile=new mongoose.Schema(
+const patientProfile=new mongoose.Schema(
     {
         gender:{
             type: String,
@@ -27,9 +27,17 @@ const PatientProfile=new mongoose.Schema(
             type:mongoose.Types.ObjectId,
             ref:'Patient',
             required: true
+        },
+        steps:{
+            type: Number,
+            default: 0
+        },
+        target:{
+            type: Number,
+            default: 8000
         }
     }
 )
 
-const model=mongoose.model('PatientProfile',PatientProfile);
+const model=mongoose.model('PatientProfile',patientProfile);
 module.exports=model;

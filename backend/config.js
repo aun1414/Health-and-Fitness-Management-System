@@ -1,5 +1,5 @@
 exports.SIMP_STORAGE_ROLES_ADDRESS =
-'0xFc3411E9e758A4656D557cA81946559D961b01DA'
+'0x69F470DAA38C2CbF51575DEBbeea7899Cb8517C1'
 exports.SIMP_STORAGE_ROLES_ABI = [
     {
         "inputs": [
@@ -229,7 +229,7 @@ exports.SIMP_STORAGE_ROLES_ABI = [
 ]
 
 exports.SIMP_STORAGE_PERMISSIONS_ADDRESS =
-'0xc56C0327bd4D6823548eadC4F778987D75Ac28D7'
+'0x7835227d5eDd0E53653F7040a31e1c7eCc1ACb81'
 exports.SIMP_STORAGE_PERMISSIONS_ABI = [
   {
     "inputs": [
@@ -552,311 +552,352 @@ exports.SIMP_STORAGE_PERMISSIONS_ABI = [
 
 
 exports.SIMP_STORAGE_IPFS_ADDRESS =
-'0x6d6e5fe994da1B4f41443B385427b10bCa294C71'
+'0xBB6F94fc2D7c5967a2e66Fed5494178f1c2C1370'
 exports.SIMP_STORAGE_IPFS_ABI = [
-    {
-        "inputs": [
-        {
-            "internalType": "address",
-            "name": "contractAddress",
-            "type": "address"
-        }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-    },
-    {
-        "inputs": [],
-        "name": "fileNum",
-        "outputs": [
-        {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-        }
-        ],
-        "name": "files",
-        "outputs": [
-        {
-            "internalType": "string",
-            "name": "fileId",
-            "type": "string"
-        },
-        {
-            "internalType": "string",
-            "name": "fileType",
-            "type": "string"
-        },
-        {
-            "internalType": "address",
-            "name": "doctorID",
-            "type": "address"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [],
-        "name": "myPermissions",
-        "outputs": [
-        {
-            "internalType": "contract Permissions",
-            "name": "",
-            "type": "address"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [],
-        "name": "num",
-        "outputs": [
-        {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "string",
-            "name": "fileId",
-            "type": "string"
-        },
-        {
-            "internalType": "string",
-            "name": "fileType",
-            "type": "string"
-        },
-        {
-            "internalType": "address",
-            "name": "doctorID",
-            "type": "address"
-        }
-        ],
-        "name": "addFile",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "string",
-            "name": "fileId",
-            "type": "string"
-        },
-        {
-            "internalType": "address",
-            "name": "pID",
-            "type": "address"
-        },
-        {
-            "internalType": "string",
-            "name": "fileType",
-            "type": "string"
-        },
-        {
-            "internalType": "address",
-            "name": "doctorID",
-            "type": "address"
-        }
-        ],
-        "name": "setFile",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "string",
-            "name": "fileId",
-            "type": "string"
-        },
-        {
-            "internalType": "address",
-            "name": "docID",
-            "type": "address"
-        },
-        {
-            "internalType": "string",
-            "name": "pHash",
-            "type": "string"
-        }
-        ],
-        "name": "grantPermission",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "string",
-            "name": "fileId",
-            "type": "string"
-        },
-        {
-            "internalType": "address",
-            "name": "docID",
-            "type": "address"
-        }
-        ],
-        "name": "revokePermission",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "string",
-            "name": "fileId",
-            "type": "string"
-        },
-        {
-            "internalType": "address",
-            "name": "docID",
-            "type": "address"
-        }
-        ],
-        "name": "getPermission",
-        "outputs": [
-        {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "string",
-            "name": "fileType",
-            "type": "string"
-        },
-        {
-            "internalType": "address",
-            "name": "doctorID",
-            "type": "address"
-        }
-        ],
-        "name": "returnFile",
-        "outputs": [
-        {
-            "internalType": "string",
-            "name": "",
-            "type": "string"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "string",
-            "name": "fileId",
-            "type": "string"
-        }
-        ],
-        "name": "getFileNumByID",
-        "outputs": [
-        {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "uint256",
-            "name": "number",
-            "type": "uint256"
-        }
-        ],
-        "name": "getFileID",
-        "outputs": [
-        {
-            "internalType": "string",
-            "name": "",
-            "type": "string"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "uint256",
-            "name": "number",
-            "type": "uint256"
-        }
-        ],
-        "name": "getFileType",
-        "outputs": [
-        {
-            "internalType": "string",
-            "name": "",
-            "type": "string"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    },
-    {
-        "inputs": [
-        {
-            "internalType": "uint256",
-            "name": "number",
-            "type": "uint256"
-        }
-        ],
-        "name": "getFileDID",
-        "outputs": [
-        {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-        }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-    }
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "contractAddress",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "fileNum",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "files",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "fileType",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "doctorID",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "myPermissions",
+    "outputs": [
+      {
+        "internalType": "contract Permissions",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "num",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "fileType",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "doctorID",
+        "type": "address"
+      }
+    ],
+    "name": "addFile",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "pID",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "fileType",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "doctorID",
+        "type": "address"
+      }
+    ],
+    "name": "setFile",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "fileType",
+        "type": "string"
+      }
+    ],
+    "name": "addVitalFile",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "pID",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "fileType",
+        "type": "string"
+      }
+    ],
+    "name": "setVitalFile",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "docID",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "pHash",
+        "type": "string"
+      }
+    ],
+    "name": "grantPermission",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "docID",
+        "type": "address"
+      }
+    ],
+    "name": "revokePermission",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "docID",
+        "type": "address"
+      }
+    ],
+    "name": "getPermission",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "fileType",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "doctorID",
+        "type": "address"
+      }
+    ],
+    "name": "returnFile",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "fileId",
+        "type": "string"
+      }
+    ],
+    "name": "getFileNumByID",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "getFileID",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "getFileType",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "getFileDID",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  }
 ]

@@ -51,6 +51,58 @@ const DailyStep = () => {
     }, [])
 
     React.useEffect(() => {
+        GoogleFit.checkIsAuthorized().then(async () => {
+            var currDate = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate(),
+              );
+        
+              var lastDate = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate()+1,
+              );
+        
+
+            const opt = {
+                startDate: currDate.toISOString(), // required ISO8601Timestamp
+                endDate: lastDate.toISOString(), // required ISO8601Timestamp
+                bucketUnit: 'DAY', // optional - default "DAY". Valid values: "NANOSECOND" | "MICROSECOND" | "MILLISECOND" | "SECOND" | "MINUTE" | "HOUR" | "DAY"
+                bucketInterval: 1, // optional - default 1.
+            };
+            var authorized = GoogleFit.isAuthorized;
+            if (authorized) {
+                console.log(date, " ", lastDate)
+                const res = await GoogleFit.getDailyStepCountSamples(opt);
+                if (res.length !== 0) {
+                    for (var i = 0; i < res.length; i++) {
+
+                        if (res[i].source === 'com.google.android.gms:estimated_steps') {
+
+                            console.log(res[i])
+                            dailyStepCount = res[i].steps;
+                            console.log("Steps:", dailyStepCount)
+                            if (dailyStepCount.length !== 0) {
+                               
+                                
+                            }
+                            else {
+                                
+                            }
+
+
+                        }
+                    }
+                };
+
+
+            }
+        })
+
+    }, [date])
+
+    React.useEffect(() => {
         GoogleFit.checkIsAuthorized().then(() => {
             var authorized = GoogleFit.isAuthorized;
             if (authorized) {
@@ -68,17 +120,26 @@ const DailyStep = () => {
         });
     }, [fitAuthorized]);
 
+   
+
     React.useEffect(() => {
         GoogleFit.checkIsAuthorized().then(async () => {
-            var lastDate = new Date(
+            var currDate = new Date(
                 date.getFullYear(),
                 date.getMonth(),
                 date.getDate(),
-            );
+              );
+        
+              var lastDate = new Date(
+                date.getFullYear(),
+                date.getMonth(),
+                date.getDate()+1,
+              );
+        
 
             const opt = {
-                startDate: lastDate.toISOString(), // required ISO8601Timestamp
-                endDate: date.toISOString(), // required ISO8601Timestamp
+                startDate: currDate.toISOString(), // required ISO8601Timestamp
+                endDate: lastDate.toISOString(), // required ISO8601Timestamp
                 bucketUnit: 'DAY', // optional - default "DAY". Valid values: "NANOSECOND" | "MICROSECOND" | "MILLISECOND" | "SECOND" | "MINUTE" | "HOUR" | "DAY"
                 bucketInterval: 1, // optional - default 1.
             };
@@ -191,7 +252,7 @@ const DailyStep = () => {
                                     }}
                                     width={Dimensions.get("window").width - 20}
                                     height={250}
-                                    strokeWidth={30}
+                                    strokeWidth={20}
                                     radius={80}
                                     chartConfig={{
                                         backgroundGradientFrom: "#FFFFFF",

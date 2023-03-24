@@ -32,7 +32,7 @@ const ProfileDoctor = () => {
     try{
       const addressid = await AsyncStorage.getItem("addressid");
       
-      const response = fetch(`${HTTP_CLIENT_URL}/doctor/get`, {
+      const response = fetch(`${HTTP_CLIENT_URL}/doctorProfile/get`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,8 +47,11 @@ const ProfileDoctor = () => {
          //checking if the response has status ok
         if (d.success) {
           console.log(d);
-          setDoctorName(d.doctor.name);
-          setAddressId(d.doctor.email)
+          setDoctorName(d.doctorProfile.doctor.name);
+          setAddressId(d.doctorProfile.doctor.email)
+          setEducation(d.doctorProfile.education)
+          setSpecialization(d.doctorProfile.specialization);
+          setExperience(d.doctorProfile.experience)
       
         }
         

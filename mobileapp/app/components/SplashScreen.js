@@ -59,7 +59,7 @@ const SplashScreen = () => {
                 style={{ height: '100%', width: '100%' }}>
                     <View style={styles.center}>
                 <Image
-                    source={require('../images/splashscreen1.png')}
+                    source={require('../images/icon.png')}
                     style={styles.image}
                 />
                 <Text></Text>

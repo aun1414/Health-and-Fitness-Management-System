@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Grid, Row, Col } from 'react-native-paper-grid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HTTP_CLIENT_URL } from '../../url';
-
+import GoogleFit, { Scopes } from 'react-native-google-fit'
 
 
 const ProfilePatient = () => {
@@ -29,6 +29,7 @@ const ProfilePatient = () => {
   const [visibleAge, setvisibleAge] = React.useState(false);
   const [age, setAge] = React.useState(0);
   const [modalAge, setModalAge] = React.useState(0);
+  const [targetSteps, setTargetSteps] = React.useState(0);
 
   const [patientName, setPatientName] = React.useState("");
   const [addressId, setAddressId] = React.useState("");
@@ -43,7 +44,7 @@ const ProfilePatient = () => {
     try{
       const addressid = await AsyncStorage.getItem("addressid");
       
-      const response = fetch(`${HTTP_CLIENT_URL}/patient/get`, {
+      const response = fetch(`${HTTP_CLIENT_URL}/patientProfile/get`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,9 +59,14 @@ const ProfilePatient = () => {
          //checking if the response has status ok
         if (d.success) {
           console.log(d);
-          setPatientName(d.patient.name);
-          setAddressId(d.patient.email)
-      
+          setPatientName(d.patientProfile.patient.name);
+          setAddressId(d.patientProfile.patient.email);
+          setAge(d.patientProfile.age);
+          setGender(d.patientProfile.gender);
+          setHeight(d.patientProfile.height);
+          setWeight(d.patientProfile.weight);
+          setBloodGroup(d.patientProfile.bloodGroup)
+          setTargetSteps(d.patientProfile.target)
         }
         
       });
@@ -80,6 +86,7 @@ const ProfilePatient = () => {
         'ispatientloggedIn',
         "0",
       );
+      // GoogleFit.disconnect();
     navigation.navigate('StartPage');
   }
 
@@ -481,7 +488,7 @@ const ProfilePatient = () => {
                 <Row>
                   <Col>
                     <Text style={styles.ColGridLeft}>
-                      Blood
+                      Blood Group
                     </Text>
                   </Col>
                   <Col>
@@ -500,12 +507,12 @@ const ProfilePatient = () => {
                 <Row>
                   <Col>
                     <Text style={styles.ColGridLeft}>
-                      Rank
+                      Target Steps
                     </Text>
                   </Col>
                   <Col>
                     <Text style={styles.ColGridRight} >
-                      &gt;
+                      {targetSteps}
                     </Text>
                   </Col>
                 </Row>

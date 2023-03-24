@@ -39,13 +39,13 @@ lab test results of patients (Implemented)
 
 * Patient can give access to only authorized doctors to see their record (Implemented)
 
-* Patient can give time limited access to doctors to see their records
+* Patient can give time limited access to doctors to see their records (Implemented)
 
-* Integration of App with smartwatch (To be Implemented)
+* Integration of App with smartwatch (Implemented)
 
-* Tracking and recording physical activity of Patient (To be Implemented)
+* Tracking and recording physical activity of Patient (Implemented)
 
-* Token based reward system on the basis of patient physical  (To be Implemented)
+* Token based reward system on the basis of patient physical  
 
 * Ranking System on the basis of tokens earned by use (To be Implemented)
 
@@ -108,6 +108,13 @@ The proxy re-encryption method creates a secret key using the patient's private 
 Output:
 
 ![](./ss/proxy.PNG)
+
+## Smart Watch Integration
+React Native mobile app is integrated with a smartwatch using Google Fit. Google Fit is a health tracking platform that allows users to track their physical activity, such as steps taken and sync this data with other applications. By integrating Google Fit with our React Native app, we can provide users with a seamless experience that allows them to track their fitness data both on their mobile devices and on their smartwatches. 
+
+|  |   | |
+| --- | --- | --- |
+| ![](./ss/heartrate.png)  |  ![](./ss/bp.png) | ![](./ss/steps.png) |
 
 ## Database 
 ---

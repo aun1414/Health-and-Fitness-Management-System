@@ -38,8 +38,8 @@ export default function PatientPermission() {
           },
 
         }} >
-        <Tab.Screen name="View Permissions" component={ViewPermissions} />
         <Tab.Screen name="Add Permissions" component={AddPermissions} />
+        <Tab.Screen name="View Permissions" component={ViewPermissions} />
       </Tab.Navigator>
     </NavigationContainer>
 

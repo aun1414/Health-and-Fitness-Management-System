@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import GoogleFit, { Scopes } from 'react-native-google-fit'
 import DatePicker from 'react-native-date-picker';
 import { LineChart } from 'react-native-chart-kit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { HTTP_CLIENT_URL } from '../../url';
 
 const HeartRate = () => {
 
@@ -38,6 +40,7 @@ const HeartRate = () => {
   const [myData, setMyData] = React.useState([]);
   const [times, setTimes] = React.useState([]);
   const [heartRates, setHeartRates] = React.useState([70,80]);
+  const [origHeartRates, setOrigHeartRates] = React.useState([]);
 
   React.useEffect(() => {
     const backAction = () => {
@@ -70,21 +73,27 @@ const HeartRate = () => {
 
   React.useEffect(() => {
     GoogleFit.checkIsAuthorized().then(async () => {
-      var lastDate = new Date(
+      var currDate = new Date(
         date.getFullYear(),
         date.getMonth(),
         date.getDate(),
       );
 
+      var lastDate = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()+1,
+      );
+
       const opt = {
-        startDate: lastDate.toISOString(), // required ISO8601Timestamp
-        endDate: date.toISOString(), // required ISO8601Timestamp
+        startDate: currDate.toISOString(), // required ISO8601Timestamp
+        endDate: lastDate.toISOString(), // required ISO8601Timestamp
         bucketUnit: 'DAY', // optional - default "DAY". Valid values: "NANOSECOND" | "MICROSECOND" | "MILLISECOND" | "SECOND" | "MINUTE" | "HOUR" | "DAY"
         bucketInterval: 1, // optional - default 1.
       };
       var authorized = GoogleFit.isAuthorized;
       if (authorized) {
-        console.log(date, " ", lastDate)
+        console.log(currDate, " ", lastDate)
         const heartrate = await GoogleFit.getHeartRateSamples(opt);
         setMyData(heartrate)
         console.log(heartrate)
@@ -92,6 +101,7 @@ const HeartRate = () => {
         if(heartrate.length>0){
           const h=heartrate.map(item => item.value)
           setHeartRates(h)
+          setOrigHeartRates(h)
           console.log(h)
         }
 
@@ -113,6 +123,114 @@ const HeartRate = () => {
   const ok = () => {
     //making ModalVisible false to hide the modal
     setModalVisible(false);
+
+  }
+
+  const addToBlockchain = async () => {
+    console.log("Length: ", origHeartRates.length)
+    if (origHeartRates.length === 0) {
+      setModalMsg("No Data Present");
+      setModalVisible(true);
+    }
+    else {
+      const patientid = await AsyncStorage.getItem('addressid');
+      fetch(`${HTTP_CLIENT_URL}/patient/get`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addressid: patientid }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        const d1 = await res.json();
+        console.log(d1);
+        const mypatient = d1.patient
+
+        //checking if the response has status ok
+        if (d1.success) {
+
+          let avgHeartRate = 0
+
+          for (let i = 0; i < origHeartRates.length; i++) {
+            avgHeartRate += origHeartRates[i]
+          }
+
+
+          avgHeartRate=avgHeartRate/origHeartRates.length;
+       
+          const dataToEncrypt = { file: 'HeartRate', patient: patientid, avgHeartRate, date: date.toLocaleString() }
+
+          fetch(`${HTTP_CLIENT_URL}/rsa/encrypt`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ key: mypatient.publickey, dataToEncrypt }),
+          }).then(async res => {
+            //On Sucessufully returning from API collect response
+            const d1 = await res.json();
+            console.log(d1);
+
+            //checking if the response has status ok
+            if (d1.success) {
+              fetch(`${HTTP_CLIENT_URL}/ipfs/uploadFile`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ file: "HeartRate.json", content: d1.encryptedFile }),
+              }).then(async res => {
+                //On Sucessufully returning from API collect response
+                const d2 = await res.json();
+                console.log(d2);
+
+                //checking if the response has status ok
+                if (d2.success) {
+                  fetch(`${HTTP_CLIENT_URL}/contracts/uploadVitals`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ patientid: patientid, fileType: "HeartRate", hash: d2.hashValue }),
+                  }).then(async res => {
+                    //On Sucessufully returning from API collect response
+                    const d = await res.json();
+                    console.log(d);
+
+                    //checking if the response has status ok
+                    if (d.success) {
+
+                      setModalMsg("Added Succesfully");
+                      setModalVisible(true);
+                    }
+                    else {
+                      console.log(d)
+                      setModalMsg("Error uploading to Blockchain");
+                      setModalVisible(true);
+                    }
+                  });
+                }
+                else {
+                  console.log(d2)
+                  setModalMsg("Error uploading to IPFS");
+                  setModalVisible(true);
+                }
+              });
+            }
+            else {
+              console.log(d1)
+              setModalMsg("Error Encrypting File");
+              setModalVisible(true);
+            }
+          });
+        }
+        else {
+          console.log(d1)
+          setModalMsg(d1.error);
+          setModalVisible(true);
+        }
+      });
+    }
 
   }
 
@@ -229,17 +347,20 @@ const HeartRate = () => {
                 />
 
                 <View style={styles.rowline}>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={()=> navigation.navigate('HeartRateData', {date: date.toLocaleDateString(),element: myData})}
+                  >
                     <Text
                       style={styles.linktext}
-                      onPress={()=> navigation.navigate('HeartRateData', {date: date.toLocaleDateString(),element: myData})}
                     >
                       See All Data
                     </Text>
 
                   </TouchableOpacity>
 
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                  onPress={addToBlockchain}
+                  >
                   <Text
                     style={styles.linktext}
                   >

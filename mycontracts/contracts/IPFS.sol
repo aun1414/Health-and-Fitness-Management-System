@@ -45,6 +45,26 @@ contract IPFS{
 
         }
 
+        //Functions to add vital files
+    
+    function addVitalFile(string memory fileId,string memory fileType) public {
+            files[num].fileId = fileId;
+            files[num].fileType = fileType;
+            fileNum+=1;
+            num+=1;
+        }
+
+    
+    function setVitalFile(string memory fileId, address pID,string memory fileType) public {
+            // uint i=getFileNumByID(fileId);
+            myPermissions.setFile(fileId,pID);
+            // (file.fileId)=myPermissions.getFile(i);
+            addVitalFile(fileId,fileType);
+
+        }
+
+
+
     //Grants permission, invokes function of permissions.sol
     
     function grantPermission(string memory fileId, address docID, string memory pHash) public {

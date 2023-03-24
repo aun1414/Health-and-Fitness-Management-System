@@ -91,6 +91,18 @@ const AddPermissionsPatient = () => {
           navigation.navigate("InputKey", { path: 'LabResultFile', hash: element })
 
         }
+        else if(d2.fileType==="BloodPressure"){
+          navigation.navigate("InputKey", { path: 'BloodPressureFile', hash: element })
+
+        }
+        else if(d2.fileType==="HeartRate"){
+          navigation.navigate("InputKey", { path: 'HeartRateFile', hash: element })
+
+        }
+        else if(d2.fileType==="Temperature"){
+          navigation.navigate("InputKey", { path: 'TemperatureFile', hash: element })
+
+        }
         
 
       }

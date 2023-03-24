@@ -34,9 +34,9 @@ import HeartRateData from '../components/Patient/HeartRateData';
 import BloodPressureData from '../components/Patient/BloodPressureData';
 import TemperatureData from '../components/Patient/TemperatureData';
 import DailyStep from '../components/Patient/DailyStep';
-
-
-
+import BloodPressureFileDoc from '../components/Doctor/BloodPressureFileDoc';
+import HeartRateFileDoc from '../components/Doctor/HeartRateFileDoc';
+import TemperatureFileDoc from '../components/Doctor/TemperatureFileDoc';
 
 
 const Stack = createNativeStackNavigator();
@@ -82,7 +82,9 @@ const AppNavigator = () => {
     <Stack.Screen name='BloodPressureData' component={BloodPressureData} />
     <Stack.Screen name='TemperatureData' component={TemperatureData} />
     <Stack.Screen name='DailyStep' component={DailyStep} />
-
+    <Stack.Screen name='BloodPressureFileDoc' component={BloodPressureFileDoc} />
+    <Stack.Screen name='HeartRateFileDoc' component={HeartRateFileDoc} />
+    <Stack.Screen name='TemperatureFileDoc' component={TemperatureFileDoc} />
    </Stack.Navigator>
 
   );

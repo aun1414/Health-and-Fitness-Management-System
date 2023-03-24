@@ -60,7 +60,7 @@ const InputKey = ({ route }) => {
                         style={styles.textfield}
                         keyboardType='default'
                         multiline
-                        numberOfLines={15}
+                        numberOfLines={5}
                     />
 
 
@@ -69,7 +69,7 @@ const InputKey = ({ route }) => {
                     style={styles.button}
                     mode="contained"
                     onPress={done}>
-                    <Text>Done</Text>
+                    <Text style={{color: 'white'}}>Done</Text>
                 </Button>
                 </ScrollView>
       

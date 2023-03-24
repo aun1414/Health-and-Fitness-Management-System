@@ -23,7 +23,7 @@ exports.addDoctor = async (req, res) => {
     res.json({success: true})
 }
 catch (error) {
-    resp.json({success: false})
+    res.json({success: false})
 }
 }
 
@@ -51,7 +51,7 @@ exports.addPatient = async (req, res) => {
     res.json({success: true})
 }
 catch (error) {
-    resp.json({success: false})
+    res.json({success: false})
 }
 }
 
@@ -83,7 +83,7 @@ exports.signinDoctor = async (req, res) => {
     })
 }
 catch (error) {
-    resp.json({success: false})
+    res.json({success: false})
 }
 }
 
@@ -116,8 +116,29 @@ exports.signinPatient = async (req, res) => {
     })
 }
 catch (error) {
-    resp.json({success: false})
+    res.json({success: false})
 }
+}
+
+exports.uploadVitals = async(req, res) => {
+    try{
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider); 
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+        }
+    
+        const {patientid, fileType, hash} = req.body
+        
+    
+        const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
+    
+        await ipfsContract.methods.setVitalFile(hash, patientid, fileType).send({from: patientid, gas:900000})
+        res.json({success: true})
+    }
+    catch (error) {
+        res.json({success: false})
+    }
 }
 
 //upload file to ipfs and permission contract
@@ -138,7 +159,7 @@ exports.uploadFile = async (req, res) => {
     res.json({success: true})
 }
 catch (error) {
-    resp.json({success: false})
+    res.json({success: false})
 }
 }
 

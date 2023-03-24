@@ -2,6 +2,7 @@ const Doctor = require('../models/doctor');
 const { sendError } = require('../utils/helper');
 const PRE = require('recrypt-js');
 const Patient = require('../models/patient');
+const PatientProfile = require('../models/patientprofile')
 const counter= require('../counter')
 const Web3=require('web3')
 
@@ -67,7 +68,11 @@ exports.createPatient = async (req, res) => {
             })
         
             await newPatient.save();
-            console.log(publickey)
+            const patientProfile = new PatientProfile({
+                patient: newPatient
+            })
+            await patientProfile.save();
+
             res.status(200).json({success: true, patient: newPatient, key: privatekey})
         }
     }

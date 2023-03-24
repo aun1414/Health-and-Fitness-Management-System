@@ -64,6 +64,15 @@ const PermissionDoctor = () => {
     else if(element.type=="LabResult"){
       navigation.navigate("InputKey", { path:"LabResultInfo", hash: element.file })
     }
+    else if(element.type=="BloodPressure"){
+      navigation.navigate("InputKey", { path:"BloodPressureFileDoc", hash: element.file })
+    }
+    else if(element.type=="HeartRate"){
+      navigation.navigate("InputKey", { path:"HeartRateFileDoc", hash: element.file })
+    }
+    else if(element.type=="Temperature"){
+      navigation.navigate("InputKey", { path:"TemperatureFileDoc", hash: element.file })
+    }
     
   }
   

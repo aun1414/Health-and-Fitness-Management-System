@@ -45,9 +45,9 @@ lab test results of patients (Implemented)
 
 * Tracking and recording physical activity of Patient (Implemented)
 
-* Token based reward system on the basis of patient physical  
+* Token based reward system on the basis of patient physical activity
 
-* Ranking System on the basis of tokens earned by use (To be Implemented)
+* Ranking System on the basis of patient physical activity (Implemented)
 
 ## App Development
 ---
@@ -123,8 +123,6 @@ For storing patient and doctor account information, we need a database. For this
 All the user account information like his id, name, password is stored in the database at the time of account creation and later this information is used for login. For security purposes we store the hash of the password in the database instead of the original password.
 
 
-
-
 ## Developmemt Requirements
 ---
 React-Native
@@ -144,6 +142,8 @@ MongoDB
 Install following libraries for mobile app
 
 ```
+npm install 
+
 npm install react-native-paper@5.0.0-rc.8
 
 npm install @react-navigation/native
@@ -167,6 +167,11 @@ npm install react-native-screens react-native-safe-area-context
 npm i react-native-pager-view
 
 npm i @react-native-async-storage/async-storage --force
+ 
+npm i react-native-google-fit
+
+npm i react-native-background-timer
+
 ```
 Install following libraries for backend
 ```

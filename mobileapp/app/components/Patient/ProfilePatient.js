@@ -519,6 +519,22 @@ const ProfilePatient = () => {
               </Grid>
             </TouchableOpacity>
 
+            <TouchableOpacity
+              style={styles.grid}
+              activeOpacity={1}
+              onPress={() => navigation.navigate('Ranks')}>
+              <Grid style={styles.mainGrid}>
+                <Row>
+                  <Col>
+                    <Text style={styles.ColGridLeft}>
+                      Ranks
+                    </Text>
+                  </Col>
+                  
+                </Row>
+              </Grid>
+            </TouchableOpacity>
+
 
 
 

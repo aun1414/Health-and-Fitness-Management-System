@@ -47,6 +47,8 @@ const HomePatient = () => {
     getElements(); 
   }, [])
 
+  
+
   async function getElements() {
     var elementsArr = [
       { key: 1, name: 'Medications', uri: require('../../images/medication.jpg'), click: 'MedicationsPatient' },

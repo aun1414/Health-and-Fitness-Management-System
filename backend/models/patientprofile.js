@@ -35,6 +35,10 @@ const patientProfile=new mongoose.Schema(
         target:{
             type: Number,
             default: 8000
+        },
+        date:{
+            type: Date,
+            default: Date.now
         }
     }
 )

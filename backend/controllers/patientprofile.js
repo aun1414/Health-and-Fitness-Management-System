@@ -37,10 +37,7 @@ exports.getPatientProfile = async (req, res) => {
 exports.updateSteps = async (req, res) => {
 
     try{
-
-        const {addressid, steps} = req.body
-
-   
+        const {addressid, steps, date} = req.body
 
         const patient = await Patient.findOne({addressid});
 
@@ -53,11 +50,37 @@ exports.updateSteps = async (req, res) => {
 
             },
             {
-                $set:{steps: steps}
+                $set:{
+                    steps: steps,
+                    date: date
+                }
 
             });
             res.json({success: true, newRecord})
         }
+    }
+    catch (error) {
+        res.json({success: false})
+    }
+    
+
+}
+
+//get Steps in order
+exports.getPatientProfileDataOnSteps = async (req, res) => {
+
+    try{
+        const {date} = req.body
+        var myDate = new Date(date)
+        const allRecords = await PatientProfile.find({}).sort([['steps', -1]]).populate('patient');
+        let records=[]
+        for(var i=0; i<allRecords.length; i++){
+            if(allRecords[i].date.getDate()===myDate.getDate() && allRecords[i].date.getMonth()===myDate.getMonth() && allRecords[i].date.getFullYear()===myDate.getFullYear()){
+                records.push(records)
+            }
+        }
+        res.json({success: true, records: allRecords})
+
     }
     catch (error) {
         res.json({success: false})

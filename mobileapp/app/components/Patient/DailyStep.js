@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import GoogleFit, { Scopes } from 'react-native-google-fit'
 import DatePicker from 'react-native-date-picker';
 import { ProgressChart } from 'react-native-chart-kit';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { HTTP_CLIENT_URL } from '../../url';
 
 const DailyStep = () => {
 
@@ -50,6 +52,37 @@ const DailyStep = () => {
         return () => backHandler.remove();
     }, [])
 
+    React.useEffect( async ()=>{
+   
+            const addressid = await AsyncStorage.getItem("addressid");
+            
+            fetch(`${HTTP_CLIENT_URL}/patientProfile/getTargetSteps`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({addressid}),
+            }).then(async res => {
+              //On Sucessufully returning from API collect response
+              console.log(res);
+              const d = await res.json();
+              
+        
+               //checking if the response has status ok
+              if (d.success) {
+                console.log(d);
+                setTarget(d.steps)
+                console.log(target)
+                
+              }
+              
+            });
+        
+          
+       
+    }, [])
+
+    
     React.useEffect(() => {
         GoogleFit.checkIsAuthorized().then(async () => {
             var currDate = new Date(
@@ -157,7 +190,11 @@ const DailyStep = () => {
                             console.log("Steps:", dailyStepCount)
                             if (dailyStepCount.length !== 0) {
                                 setMyData(dailyStepCount[0])
-                                console.log(dailyStepCount[0])
+                                console.log(dailyStepCount[0], target)
+                                if(dailyStepCount[0].value>target){
+                                    setTarget(dailyStepCount[0].value)
+                                    console.log(dailyStepCount[0], target)
+                                }
                             }
                             else {
                                 setMyData({ "value": 0 });

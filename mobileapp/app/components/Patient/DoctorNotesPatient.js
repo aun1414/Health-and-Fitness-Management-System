@@ -15,6 +15,7 @@ const DoctorNotesPatient = () => {
   const navigation = useNavigation();
   const [elements, setElements] = React.useState([]);
   const [search, setSearch] = React.useState('');
+  const [tempelements, setTempElements] = React.useState([]);
 
   React.useEffect(() => {
     counter = 0;
@@ -33,7 +34,26 @@ const DoctorNotesPatient = () => {
   React.useEffect(() => {
     counter = 0;
     getElements();
-  }, [search])
+  }, [])
+
+  React.useEffect(() =>{
+    counter = 0;
+
+    let temp=[]
+    setElements(temp)
+    console.log("E",tempelements)
+    console.log("E",elements)
+    
+    for(var i=0; i<tempelements.length; i++){
+      if(tempelements[i].includes(search)){
+        temp.push(tempelements[i])
+      }
+    }
+
+    setElements(temp)
+    console.log("S",elements)
+
+}, [search])
 
   //get all doctor notes for patients from smart contracts
   async function getElements() {

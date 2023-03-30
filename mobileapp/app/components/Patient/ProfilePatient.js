@@ -30,6 +30,8 @@ const ProfilePatient = () => {
   const [age, setAge] = React.useState(0);
   const [modalAge, setModalAge] = React.useState(0);
   const [targetSteps, setTargetSteps] = React.useState(0);
+  const [visibleTargetSteps, setvisibleTargetSteps] = React.useState(false);
+  const [modalTargetSteps, setModalTargetSteps] = React.useState(0);
 
   const [patientName, setPatientName] = React.useState("");
   const [addressId, setAddressId] = React.useState("");
@@ -37,7 +39,7 @@ const ProfilePatient = () => {
   React.useEffect(()=>{
     start()
   },
-  [gender])
+  [])
 
   //get account information of patient from database
   const start = async() =>{
@@ -67,6 +69,13 @@ const ProfilePatient = () => {
           setWeight(d.patientProfile.weight);
           setBloodGroup(d.patientProfile.bloodGroup)
           setTargetSteps(d.patientProfile.target)
+
+          setModalAge(d.patientProfile.age)
+          setModalGender(d.patientProfile.gender)
+          setModalHeight(d.patientProfile.height);
+          setModalWeight(d.patientProfile.weight);
+          setModalBloodGroup(d.patientProfile.bloodGroup)
+          setModalTargetSteps(d.patientProfile.target)
         }
         
       });
@@ -99,9 +108,32 @@ const ProfilePatient = () => {
     setvisibleGender(false);
   }
 
-  const okGender = () => {
+  const okGender =  async () => {
     setGender(modalGender);
     setvisibleGender(false);
+
+    try{
+      const addressid = await AsyncStorage.getItem("addressid");
+      const response = fetch(`${HTTP_CLIENT_URL}/patientProfile/updateGender`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({addressid, gender:modalGender }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        console.log(res);
+        const d = await res.json();
+         //checking if the response has status ok
+        if (d.success) {
+          console.log(d);
+        }
+        
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
 
   }
 
@@ -118,9 +150,32 @@ const ProfilePatient = () => {
     setvisibleBloodGroup(false);
   }
 
-  const okBloodGroup = () => {
+  const okBloodGroup = async () => {
     setBloodGroup(modalbloodGroup);
     setvisibleBloodGroup(false);
+
+    try{
+      const addressid = await AsyncStorage.getItem("addressid");
+      const response = fetch(`${HTTP_CLIENT_URL}/patientProfile/updateBloodGroup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({addressid, bloodGroup:modalbloodGroup }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        console.log(res);
+        const d = await res.json();
+         //checking if the response has status ok
+        if (d.success) {
+          console.log(d);
+        }
+        
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
 
   }
 
@@ -136,14 +191,84 @@ const ProfilePatient = () => {
   const hideModalWeight = () => {
     setvisibleWeight(false);
   }
-  const okWeight = () => {
+  const okWeight = async () => {
     setWeight(modalweight);
     setvisibleWeight(false);
+
+    try{
+      const addressid = await AsyncStorage.getItem("addressid");
+      const response = fetch(`${HTTP_CLIENT_URL}/patientProfile/updateWeight`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({addressid, weight:modalweight }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        console.log(res);
+        const d = await res.json();
+         //checking if the response has status ok
+        if (d.success) {
+          console.log(d);
+        }
+        
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
+
 
   }
 
   const cancelWeight = () => {
     setvisibleWeight(false);
+
+  }
+
+  const showModalTarget = () => {
+    setModalTargetSteps(targetSteps);
+    setvisibleTargetSteps(true);
+  }
+  const hideModalTarget = () => {
+    setvisibleTargetSteps(false);
+  }
+  const okTarget = async () => {
+    if(modalTargetSteps<1000){
+      setModalTargetSteps(999)
+    }
+    else{
+      setTargetSteps(modalTargetSteps);
+      setvisibleTargetSteps(false);
+      try{
+        const addressid = await AsyncStorage.getItem("addressid");
+        const response = fetch(`${HTTP_CLIENT_URL}/patientProfile/updateTarget`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({addressid, target:modalTargetSteps }),
+        }).then(async res => {
+          //On Sucessufully returning from API collect response
+          console.log(res);
+          const d = await res.json();
+           //checking if the response has status ok
+          if (d.success) {
+            console.log(d);
+          }
+          
+        });
+      }
+      catch (error) {
+        console.log(error);
+      }
+    }
+    
+
+  }
+
+  const cancelTarget = () => {
+    setvisibleTargetSteps(false);
 
   }
 
@@ -155,9 +280,32 @@ const ProfilePatient = () => {
   const hideModalHeight = () => {
     setvisibleHeight(false);
   }
-  const okHeight = () => {
+  const okHeight = async () => {
     setHeight(modalHeight);
     setvisibleHeight(false);
+
+    try{
+      const addressid = await AsyncStorage.getItem("addressid");
+      const response = fetch(`${HTTP_CLIENT_URL}/patientProfile/updateHeight`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({addressid, height:modalHeight }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        console.log(res);
+        const d = await res.json();
+         //checking if the response has status ok
+        if (d.success) {
+          console.log(d);
+        }
+        
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
 
   }
 
@@ -173,9 +321,31 @@ const ProfilePatient = () => {
   const hideModalAge = () => {
     setvisibleAge(false);
   }
-  const okAge = () => {
+  const okAge = async () => {
     setAge(modalAge);
     setvisibleAge(false);
+    try{
+      const addressid = await AsyncStorage.getItem("addressid");
+      const response = fetch(`${HTTP_CLIENT_URL}/patientProfile/updateAge`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({addressid, age:modalAge }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        console.log(res);
+        const d = await res.json();
+         //checking if the response has status ok
+        if (d.success) {
+          console.log(d);
+        }
+        
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
 
   }
 
@@ -186,6 +356,43 @@ const ProfilePatient = () => {
 
   return (
     <Provider>
+
+<Portal>
+        <Modal
+          visible={visibleTargetSteps}
+          onDismiss={hideModalTarget}
+          contentContainerStyle={styles.modalAge}>
+          <View>
+
+            <TextInput
+              mode='outlined'
+              keyboardType='numeric'
+              label='Target Steps (> 1000)'
+              value={modalTargetSteps}
+              onChangeText={text => setModalTargetSteps(text)}>
+
+            </TextInput>
+
+
+            <Button
+              mode='contained'
+              buttonColor='#00ced1'
+              style={styles.okbutton}
+              onPress={okTarget}>
+              Ok
+            </Button>
+
+            <Button
+              mode='outlined'
+              style={styles.cancelbutton}
+              onPress={cancelTarget}>
+              Cancel
+            </Button>
+          </View>
+
+
+        </Modal>
+      </Portal>
 
       <Portal>
         <Modal
@@ -502,7 +709,8 @@ const ProfilePatient = () => {
 
             <TouchableOpacity
               style={styles.grid}
-              activeOpacity={1}>
+              activeOpacity={1}
+              onPress={showModalTarget}>
               <Grid style={styles.mainGrid}>
                 <Row>
                   <Col>

@@ -5,17 +5,28 @@ import { useNavigation } from '@react-navigation/native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HTTP_CLIENT_URL } from '../../url';
+import { useIsFocused, useFocusEffect } from '@react-navigation/native';
 
 const RevokePermissions = () => {
 
   //declare state variables
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
   const [elements, setElements] = React.useState([]);
   const [search, setSearch] = React.useState('');
 
+    
+    React.useEffect(() => {
+      
+      console.log("Focus: ", isFocused)
+      getElements();
+      
+    }, [elements])
+
+
   
 
-  React.useEffect(() => { getElements(); }, [elements])
+  // React.useEffect(() => { getElements(); }, [])
 
   //get all files of patients for which he/she has given permission
   async function getElements() {
@@ -80,6 +91,7 @@ const RevokePermissions = () => {
   const changed = (text) => {
     setSearch(text);
     console.log(text);
+    
 
   }
 
@@ -170,12 +182,12 @@ const RevokePermissions = () => {
               justifyContent: 'center'
             }}>
 
-            <TextInput
+            {/* <TextInput
               style={styles.texfield}
               placeholder='Search...'
               mode='outlined'
               value={search}
-              onChangeText={changed} />
+              onChangeText={changed} /> */}
           </View>
 
           <Grid

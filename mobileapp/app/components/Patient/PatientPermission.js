@@ -36,7 +36,6 @@ export default function PatientPermission() {
             //  backgroundColor: '#b0e0e6',
             backgroundColor: 'royalblue'
           },
-
         }} >
         <Tab.Screen name="Add Permissions" component={AddPermissions} />
         <Tab.Screen name="View Permissions" component={ViewPermissions} />

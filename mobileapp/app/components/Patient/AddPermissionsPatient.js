@@ -18,7 +18,25 @@ const AddPermissionsPatient = () => {
 
  
 
-  React.useEffect(() => { getElements(); }, [elements])
+  React.useEffect(() => { getElements(); }, [tempelements])
+
+  React.useEffect(() =>{
+
+        let temp=[]
+        setElements(temp)
+        console.log("E",tempelements)
+        console.log("E",elements)
+        
+        for(var i=0; i<tempelements.length; i++){
+          if(tempelements[i].includes(search)){
+            temp.push(tempelements[i])
+          }
+        }
+
+        setElements(temp)
+        console.log("S",elements)
+
+  }, [search])
 
     //get all file hashes of patient from smartcontracts
   async function getElements() {
@@ -33,14 +51,13 @@ const AddPermissionsPatient = () => {
     }).then(async res => {
       //On Sucessufully returning from API collect response
       const d2 = await res.json();
-      // console.log(d2);
+      console.log(d2);
       
         //checking if the response has status ok
       if (d2.success) {
 
         setElements(d2.files);
         setTempElements(d2.files);
-        
 
       }
       else {
@@ -131,12 +148,12 @@ const AddPermissionsPatient = () => {
               justifyContent: 'center'
             }}>
 
-            <TextInput
+            {/* <TextInput
               style={styles.texfield}
               placeholder='Search...'
               mode='outlined'
               value={search}
-              onChangeText={changed} />
+              onChangeText={changed} /> */}
 
           </View>
 

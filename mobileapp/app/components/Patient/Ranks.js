@@ -42,8 +42,25 @@ const Ranks = () => {
         
           //checking if the response has status ok
         if (d2.success) {
+          let c=1;
+          let rec=d2.records;
+
+          if(rec.length>0){
+            rec[0].counter=c
+            c++;
+          }
+
+          for(i=1; i<rec.length; i++){
+            if(rec[i].steps===rec[i-1].steps){
+              rec[i].counter=rec[i-1].counter
+            }
+            else{
+              rec[i].counter=c
+              c++;
+            }
+          }
   
-          setRecords(d2.records);
+          setRecords(rec);
           
   
         }
@@ -96,7 +113,7 @@ const Ranks = () => {
                           fontWeight: 'bold',
                           marginStart: 10
                         }}>
-                         {++counter} . {record.patient.name} ({record.patient.email})
+                         {record.counter} . {record.patient.name} ({record.patient.email})
                       </Text>
 
                       </View>

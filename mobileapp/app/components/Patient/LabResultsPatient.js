@@ -15,6 +15,7 @@ const LabResultsPatient = () => {
 
   const navigation = useNavigation();
   const [elements, setElements] = React.useState([]);
+  const [tempelements, setTempElements] = React.useState([]);
   const [search, setSearch] = React.useState('');
 
   React.useEffect(() => {
@@ -35,7 +36,7 @@ const LabResultsPatient = () => {
   React.useEffect(() => {
     counter = 0;
     getElements();
-  }, [search])
+  }, [])
 
   //get all lab result files of patient
   async function getElements() {
@@ -55,6 +56,7 @@ const LabResultsPatient = () => {
         //checking if the response has status ok
       if (d2.success) {
 
+        setTempElements(d2.files)
         setElements(d2.files);
         
 
@@ -65,6 +67,25 @@ const LabResultsPatient = () => {
     }
     });
   }
+
+  React.useEffect(() =>{
+    counter = 0;
+
+    let temp=[]
+    setElements(temp)
+    console.log("E",tempelements)
+    console.log("E",elements)
+    
+    for(var i=0; i<tempelements.length; i++){
+      if(tempelements[i].includes(search)){
+        temp.push(tempelements[i])
+      }
+    }
+
+    setElements(temp)
+    console.log("S",elements)
+
+}, [search])
 
   const changed = (text) => {
     setSearch(text);

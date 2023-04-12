@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity, Dimensions } from 'react-native';
+import { ActivityIndicator, ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity, Dimensions } from 'react-native';
 import { Text, Button, Provider, Portal, Modal, TextInput } from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
@@ -41,6 +41,7 @@ const HeartRate = () => {
   const [times, setTimes] = React.useState([]);
   const [heartRates, setHeartRates] = React.useState([70,80]);
   const [origHeartRates, setOrigHeartRates] = React.useState([]);
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     const backAction = () => {
@@ -72,6 +73,7 @@ const HeartRate = () => {
   }, [fitAuthorized]);
 
   React.useEffect(() => {
+    setLoading(true)
     GoogleFit.checkIsAuthorized().then(async () => {
       var currDate = new Date(
         date.getFullYear(),
@@ -96,6 +98,7 @@ const HeartRate = () => {
         console.log(currDate, " ", lastDate)
         const heartrate = await GoogleFit.getHeartRateSamples(opt);
         setMyData(heartrate)
+        setLoading(false)
         console.log(heartrate)
 
         if(heartrate.length>0){
@@ -103,15 +106,20 @@ const HeartRate = () => {
           setHeartRates(h)
           setOrigHeartRates(h)
           console.log(h)
+          
         }
 
-        for (var i = 0; i < heartrate.length; i++) {
-          var d = new Date(heartrate[i].endDate)
+        // for (var i = 0; i < heartrate.length; i++) {
+        //   var d = new Date(heartrate[i].endDate)
 
-          console.log(d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
-        }
+        //   console.log(d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+        // }
 
       }
+      else{
+        setLoading(false)
+      }
+
     })
 
   }, [date])
@@ -128,11 +136,12 @@ const HeartRate = () => {
 
   const addToBlockchain = async () => {
     console.log("Length: ", origHeartRates.length)
-    if (origHeartRates.length === 0) {
+    if (myData.length === 0) {
       setModalMsg("No Data Present");
       setModalVisible(true);
     }
     else {
+      setLoading(true)
       const patientid = await AsyncStorage.getItem('addressid');
       fetch(`${HTTP_CLIENT_URL}/patient/get`, {
         method: 'POST',
@@ -149,16 +158,16 @@ const HeartRate = () => {
         //checking if the response has status ok
         if (d1.success) {
 
-          let avgHeartRate = 0
+          // let avgHeartRate = 0
 
-          for (let i = 0; i < origHeartRates.length; i++) {
-            avgHeartRate += origHeartRates[i]
-          }
+          // for (let i = 0; i < origHeartRates.length; i++) {
+          //   avgHeartRate += origHeartRates[i]
+          // }
 
 
-          avgHeartRate=avgHeartRate/origHeartRates.length;
+          // avgHeartRate=avgHeartRate/origHeartRates.length;
        
-          const dataToEncrypt = { file: 'HeartRate', patient: patientid, avgHeartRate, date: date.toLocaleString() }
+          const dataToEncrypt = { file: 'HeartRate', patient: patientid, myData, date: date.toLocaleDateString() }
 
           fetch(`${HTTP_CLIENT_URL}/rsa/encrypt`, {
             method: 'POST',
@@ -191,7 +200,7 @@ const HeartRate = () => {
                     headers: {
                       'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ patientid: patientid, fileType: "HeartRate", hash: d2.hashValue }),
+                    body: JSON.stringify({ patientid: patientid, fileType: "HeartRate_"+date.toLocaleDateString(), hash: d2.hashValue }),
                   }).then(async res => {
                     //On Sucessufully returning from API collect response
                     const d = await res.json();
@@ -199,11 +208,12 @@ const HeartRate = () => {
 
                     //checking if the response has status ok
                     if (d.success) {
-
+                      setLoading(false)
                       setModalMsg("Added Succesfully");
                       setModalVisible(true);
                     }
                     else {
+                      setLoading(false)
                       console.log(d)
                       setModalMsg("Error uploading to Blockchain");
                       setModalVisible(true);
@@ -211,6 +221,7 @@ const HeartRate = () => {
                   });
                 }
                 else {
+                  setLoading(false)
                   console.log(d2)
                   setModalMsg("Error uploading to IPFS");
                   setModalVisible(true);
@@ -218,6 +229,7 @@ const HeartRate = () => {
               });
             }
             else {
+              setLoading(false)
               console.log(d1)
               setModalMsg("Error Encrypting File");
               setModalVisible(true);
@@ -225,6 +237,7 @@ const HeartRate = () => {
           });
         }
         else {
+          setLoading(false)
           console.log(d1)
           setModalMsg(d1.error);
           setModalVisible(true);
@@ -272,6 +285,9 @@ const HeartRate = () => {
             {
               fitAuthorized == "Authorized" &&
               <View>
+                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                  {loading && <ActivityIndicator color={"#fff"} />}
+                </View>
                 <TouchableOpacity
                   onPress={() => setOpen(true)}>
                   <TextInput
@@ -298,7 +314,7 @@ const HeartRate = () => {
                 <LineChart
                   data={{
                     labels: myData.map((item) =>
-                      new Date(item.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                      new Date(item.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
                     ),
                     datasets: [
                       {

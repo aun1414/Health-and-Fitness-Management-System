@@ -14,8 +14,6 @@ exports.addDoctor = async (req, res) => {
     const {addressid} = req.body
     const role="Doctor"
 
-    
-
     const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
 
     await roleContract.methods.addDoctor(addressid,role).send({from: addressid, gas:300000})
@@ -39,10 +37,6 @@ exports.addPatient = async (req, res) => {
     const {addressid} = req.body
     const role="Patient"
     
-    
-    // const accounts = await web3.eth.getAccounts();
-    
- 
 
     const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
 
@@ -64,12 +58,7 @@ exports.signinDoctor = async (req, res) => {
         var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
     }
 
-    const {addressid } = req.body
-
-    
-    
-    // const accounts = await web3.eth.getAccounts();
-    
+    const {addressid } = req.body    
 
     const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
 
@@ -97,12 +86,6 @@ exports.signinPatient = async (req, res) => {
     }
 
     const {addressid } = req.body
-
-    
-    
-    // const accounts = await web3.eth.getAccounts();
-    
-
 
     const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
 
@@ -187,19 +170,17 @@ exports.getAllFilesByPatientandType = async (req, resp) => {
            await ipfsContract.methods.getFileNumByID(res[i]).call({from: patientid, gas:300000}).then(async (response)=>{
 
             await ipfsContract.methods.getFileType(response).call({from: patientid, gas:300000}).then(async (res1)=>{
-
-                if(res1==fileType){
-                    files.push(res[i]);
+                if(res1.startsWith(fileType)){
+                    const typeDate = res1.split("_")
+                    files.push({file:res[i], fileType: typeDate[0], fileDate: typeDate[1]});
                 }
-
-                
-
             })
-
 
            })
 
         }
+
+        files.reverse()
 
         resp.json({success: true, files})
 
@@ -421,9 +402,6 @@ exports.revokePermission = async (req, res) => {
     
         const {patientid, doctorid, fileId} = req.body
 
-      
-     
-    
         const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
     
         await ipfsContract.methods.revokePermission(fileId,doctorid).send({from: patientid, gas:300000})

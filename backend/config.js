@@ -1,235 +1,234 @@
 exports.SIMP_STORAGE_ROLES_ADDRESS =
-'0x9d2baE7b05E962c098E1c21C318AA7f49F543335'
+'0x26bD2D34444c28ecfcFA52db7eA2fDb7162c7b96'
 exports.SIMP_STORAGE_ROLES_ABI = [
-    {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "name": "doctors",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "doctorid",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
+  {
+    "inputs": [
       {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "name": "patients",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "patientid",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [],
-        "name": "roleCounter",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "name": "roles",
-        "outputs": [
-          {
-            "internalType": "string",
-            "name": "",
-            "type": "string"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "id",
-            "type": "address"
-          }
-        ],
-        "name": "returnRole",
-        "outputs": [
-          {
-            "internalType": "string",
-            "name": "",
-            "type": "string"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "id",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "role",
-            "type": "string"
-          }
-        ],
-        "name": "addDoctor",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "id",
-            "type": "address"
-          }
-        ],
-        "name": "getDoctor",
-        "outputs": [
-          {
-            "internalType": "string",
-            "name": "",
-            "type": "string"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "id",
-            "type": "address"
-          }
-        ],
-        "name": "loginDoctor",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "id",
-            "type": "address"
-          },
-          {
-            "internalType": "string",
-            "name": "role",
-            "type": "string"
-          }
-        ],
-        "name": "addPatient",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "id",
-            "type": "address"
-          }
-        ],
-        "name": "getPatient",
-        "outputs": [
-          {
-            "internalType": "string",
-            "name": "",
-            "type": "string"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "id",
-            "type": "address"
-          }
-        ],
-        "name": "loginPatient",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
-      },
-      {
-        "inputs": [],
-        "name": "getAllDoctors",
-        "outputs": [
-          {
-            "internalType": "address[]",
-            "name": "",
-            "type": "address[]"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function",
-        "constant": true
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
-  
+    ],
+    "name": "doctors",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "doctorid",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "patients",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "patientid",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "roleCounter",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "roles",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "id",
+        "type": "address"
+      }
+    ],
+    "name": "returnRole",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "id",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "role",
+        "type": "string"
+      }
+    ],
+    "name": "addDoctor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "id",
+        "type": "address"
+      }
+    ],
+    "name": "getDoctor",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "id",
+        "type": "address"
+      }
+    ],
+    "name": "loginDoctor",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "id",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "role",
+        "type": "string"
+      }
+    ],
+    "name": "addPatient",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "id",
+        "type": "address"
+      }
+    ],
+    "name": "getPatient",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "id",
+        "type": "address"
+      }
+    ],
+    "name": "loginPatient",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [],
+    "name": "getAllDoctors",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  }
 ]
 
 exports.SIMP_STORAGE_PERMISSIONS_ADDRESS =
-'0x023DAc7Cd039ae533D1FB962F7FdAcFE5376bAb8'
+'0x0d0c94055D4AC56B51Fb7aA1B5f37F0e1828a160'
 exports.SIMP_STORAGE_PERMISSIONS_ABI = [
   {
     "inputs": [
@@ -384,6 +383,24 @@ exports.SIMP_STORAGE_PERMISSIONS_ABI = [
     "stateMutability": "view",
     "type": "function",
     "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "id",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "role",
+        "type": "string"
+      }
+    ],
+    "name": "addPatient",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "inputs": [
@@ -545,14 +562,14 @@ exports.SIMP_STORAGE_PERMISSIONS_ABI = [
     "stateMutability": "view",
     "type": "function",
     "constant": true
-  }          
+  }
 ]
 
 
 
 
 exports.SIMP_STORAGE_IPFS_ADDRESS =
-'0x46e0E731B76326d1B7cF35ce0457364dEC20CcDb'
+'0x982192eBaBA895158B8Aaa923d24206E2E613777'
 exports.SIMP_STORAGE_IPFS_ABI = [
   {
     "inputs": [
@@ -789,31 +806,6 @@ exports.SIMP_STORAGE_IPFS_ABI = [
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "fileType",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "doctorID",
-        "type": "address"
-      }
-    ],
-    "name": "returnFile",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
       }
     ],
     "stateMutability": "view",

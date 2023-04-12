@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Image, BackHandler, ImageBackground, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, ScrollView, View, StyleSheet, Image, BackHandler, ImageBackground, TouchableOpacity } from 'react-native';
 import { Text, Portal, TextInput, Provider, Modal, Button } from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
@@ -19,121 +19,149 @@ const AddMedications = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalMsg, setModalMsg] = React.useState("");
   const [patient, setPatient] = React.useState("");
-  const [days, setDays] = React.useState();
+  const [days, setDays] = React.useState(0);
   const [diagnosis, setDiagnosis] = React.useState("");
   const [dosage, setDosage] = React.useState("");
   const [dateInput, setDateInput] = React.useState("");
   const [date, setDate] = React.useState(new Date());
   const [open, setOpen] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
   //function to be called on pressing add button
   async function add() {
-    fetch(`${HTTP_CLIENT_URL}/patient/get`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ addressid: patient }),
-    }).then(async res => {
-      //On Sucessufully returning from API collect response
-      const d1 = await res.json();
-      console.log(d1);
+    if (patient.trim() === '') {
+      setModalMsg("Patient Id is required");
+      setModalVisible(true);
 
-       //checking if the response has status ok
-      if (d1.success) {
-
-        const mypatient=d1.patient
-        console.log(mypatient)
-
-        const doctorid=await AsyncStorage.getItem('addressid');
-
-       
-        const dataToEncrypt={file: 'Medication', patient: patient, doctor: doctorid, medicine, dosage, days, diagnosis, date: date.toLocaleString() }
-
-        fetch(`${HTTP_CLIENT_URL}/rsa/encrypt`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ key: mypatient.publickey, dataToEncrypt }),
-        }).then(async res => {
-          //On Sucessufully returning from API collect response
-          const d1 = await res.json();
-          console.log(d1);
-    
-            //checking if the response has status ok
-          if (d1.success) {
-            fetch(`${HTTP_CLIENT_URL}/ipfs/uploadFile`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ file: "Medication.json", content: d1.encryptedFile }),
-            }).then(async res => {
-              //On Sucessufully returning from API collect response
-              const d2 = await res.json();
-              console.log(d2);
-        
-                //checking if the response has status ok
-              if (d2.success) {
-                fetch(`${HTTP_CLIENT_URL}/contracts/uploadFile`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ patientid: mypatient.addressid, doctorid: doctorid,  fileType: "Medication", hash: d2.hashValue }),
-                }).then(async res => {
-                  //On Sucessufully returning from API collect response
-                  const d = await res.json();
-                  console.log(d);
-            
-                    //checking if the response has status ok
-                  if (d.success) {
-            
-                    setModalMsg("Medicine Added Succesfully");
-                    setModalVisible(true);
-                    
-            
-                  }
-                  else {
-                    console.log(d)
-                    setModalMsg("Error uploading to Blockchain");
-                    setModalVisible(true);
-                }
-                });
-                
-                
-        
-              }
-              else {
-                console.log(d2)
-                setModalMsg("Error uploading to IPFS");
-                setModalVisible(true);
-            }
-            });
-            
-            
-    
-          }
-          else {
-            console.log(d1)
-            setModalMsg("Error Encrypting File");
-            setModalVisible(true);
-        }
-        });
-            
-    
-        
-        
-
-      }
-      else {
-        console.log(d1)
-        setModalMsg(d1.error);
-        setModalVisible(true);
     }
-    });
-    
+    else if (medicine.trim() === '') {
+      setModalMsg("Medicine Name is required");
+      setModalVisible(true);
+
+    }
+    else if (days <= 0) {
+      setModalMsg("Days should be greater 0");
+      setModalVisible(true);
+
+    }
+    else if (dosage.trim() === '') {
+      setModalMsg("Dosage is required");
+      setModalVisible(true);
+
+    }
+    else {
+      setLoading(true)
+      fetch(`${HTTP_CLIENT_URL}/patient/get`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addressid: patient }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        const d1 = await res.json();
+        console.log(d1);
+
+        //checking if the response has status ok
+        if (d1.success) {
+
+          const mypatient = d1.patient
+          console.log(mypatient)
+
+          const doctorid = await AsyncStorage.getItem('addressid');
+
+
+          const dataToEncrypt = { file: 'Medication', patient: patient, doctor: doctorid, medicine, dosage, days, diagnosis, date: date.toLocaleString() }
+
+          fetch(`${HTTP_CLIENT_URL}/rsa/encrypt`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ key: mypatient.publickey, dataToEncrypt }),
+          }).then(async res => {
+            //On Sucessufully returning from API collect response
+            const d1 = await res.json();
+            console.log(d1);
+
+            //checking if the response has status ok
+            if (d1.success) {
+              fetch(`${HTTP_CLIENT_URL}/ipfs/uploadFile`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ file: "Medication.json", content: d1.encryptedFile }),
+              }).then(async res => {
+                //On Sucessufully returning from API collect response
+                const d2 = await res.json();
+                console.log(d2);
+
+                //checking if the response has status ok
+                if (d2.success) {
+                  fetch(`${HTTP_CLIENT_URL}/contracts/uploadFile`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ patientid: mypatient.addressid, doctorid: doctorid, fileType: "Medication_" + date.toLocaleDateString(), hash: d2.hashValue }),
+                  }).then(async res => {
+                    //On Sucessufully returning from API collect response
+                    const d = await res.json();
+                    console.log(d);
+
+                    //checking if the response has status ok
+                    if (d.success) {
+                      setLoading(false)
+                      setModalMsg("Medicine Added Succesfully");
+                      setModalVisible(true);
+
+
+                    }
+                    else {
+                      setLoading(false)
+                      console.log(d)
+                      setModalMsg("Error uploading to Blockchain");
+                      setModalVisible(true);
+                    }
+                  });
+
+
+
+                }
+                else {
+                  setLoading(false)
+                  console.log(d2)
+                  setModalMsg("Error uploading to IPFS");
+                  setModalVisible(true);
+                }
+              });
+
+
+
+            }
+            else {
+              setLoading(false)
+              console.log(d1)
+              setModalMsg("Error Encrypting File");
+              setModalVisible(true);
+            }
+          });
+
+
+
+
+
+        }
+        else {
+          setLoading(false)
+          console.log(d1)
+          setModalMsg(d1.error);
+          setModalVisible(true);
+        }
+      });
+    }
+
   }
 
   //function to be called on closing modal displaying medicine is added
@@ -141,14 +169,14 @@ const AddMedications = () => {
     //making ModalVisible false to hide the modal that medicine is added
     setModalVisible(false);
 
-    if(modalMsg==="Medicine Added Succesfully"){
+    if (modalMsg === "Medicine Added Succesfully") {
       //navigates to doctor home page
       navigation.navigate('MainDoctor');
     }
-    
+
   }
 
- 
+
 
   React.useEffect(() => {
     //handle back button pressed
@@ -160,7 +188,7 @@ const AddMedications = () => {
     return () => backHandler.remove();
   }, [])
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
 
   })
 
@@ -173,7 +201,7 @@ const AddMedications = () => {
           visible={modalVisible}
           onDismiss={ok}
           contentContainerStyle={styles.modalAge}>
-            
+
           <View>
 
             <Text
@@ -192,7 +220,7 @@ const AddMedications = () => {
 
         </Modal>
 
-        
+
       </Portal>
 
       <View style={styles.container}>
@@ -207,6 +235,11 @@ const AddMedications = () => {
               source={require('../../images/medication.jpg')}
               style={styles.image}
             />
+
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+              {loading && <ActivityIndicator color={"#fff"} />}
+            </View>
+
             <TextInput
               label="Patient"
               value={patient}
@@ -243,28 +276,28 @@ const AddMedications = () => {
               style={styles.textfield}
             />
 
-<TouchableOpacity
-            onPress={() => setOpen(true)}>
-            <TextInput
-              label="Date"
-              value={date.toLocaleString()}
-              style={styles.textfield}
-            editable={false}
-            />
-            
+            <TouchableOpacity
+              onPress={() => setOpen(true)}>
+              <TextInput
+                label="Date"
+                value={date.toLocaleString()}
+                style={styles.textfield}
+                editable={false}
+              />
+
             </TouchableOpacity>
             <DatePicker
-                    modal
-                    open={open}
-                    date={date}
-                    onConfirm={(date) => {
-                    setOpen(false)
-                    setDate(date)
-                    }}
-                    onCancel={() => {
-                    setOpen(false)
-                    }}
-                />
+              modal
+              open={open}
+              date={date}
+              onConfirm={(date) => {
+                setOpen(false)
+                setDate(date)
+              }}
+              onCancel={() => {
+                setOpen(false)
+              }}
+            />
 
 
             <Button buttonColor='royalblue' style={styles.button} mode="contained" onPress={add}>

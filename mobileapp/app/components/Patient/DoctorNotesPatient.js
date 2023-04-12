@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
 import { Text, TextInput } from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
@@ -8,7 +8,6 @@ import '../../file';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HTTP_CLIENT_URL } from '../../url';
 
-
 const DoctorNotesPatient = () => {
   //declaring state variables
   var counter = 0;
@@ -16,6 +15,7 @@ const DoctorNotesPatient = () => {
   const [elements, setElements] = React.useState([]);
   const [search, setSearch] = React.useState('');
   const [tempelements, setTempElements] = React.useState([]);
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     counter = 0;
@@ -36,51 +36,54 @@ const DoctorNotesPatient = () => {
     getElements();
   }, [])
 
-  React.useEffect(() =>{
+  React.useEffect(() => {
     counter = 0;
 
-    let temp=[]
+    let temp = []
     setElements(temp)
-    console.log("E",tempelements)
-    console.log("E",elements)
-    
-    for(var i=0; i<tempelements.length; i++){
-      if(tempelements[i].includes(search)){
+    console.log("E", tempelements)
+    console.log("E", elements)
+
+
+    for (var i = 0; i < tempelements.length; i++) {
+      if (tempelements[i].file.includes(search)) {
         temp.push(tempelements[i])
       }
     }
 
     setElements(temp)
-    console.log("S",elements)
+    console.log("S", elements)
 
-}, [search])
+  }, [search])
 
   //get all doctor notes for patients from smart contracts
   async function getElements() {
-    const patientid =  await AsyncStorage.getItem("addressid");
+    const patientid = await AsyncStorage.getItem("addressid");
 
     fetch(`${HTTP_CLIENT_URL}/contracts/getFilesbyPatientandType`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ patientid,fileType: "DoctorNote" }),
+      body: JSON.stringify({ patientid, fileType: "DoctorNote" }),
     }).then(async res => {
       //On Sucessufully returning from API collect response
       const d2 = await res.json();
       console.log(d2);
-      
-        //checking if the response has status ok
+
+      setLoading(false)
+
+      //checking if the response has status ok
       if (d2.success) {
 
         setElements(d2.files);
-        
+
 
       }
       else {
         console.log(d2)
-        
-    }
+
+      }
     });
   }
 
@@ -116,6 +119,10 @@ const DoctorNotesPatient = () => {
               value={search}
               onChangeText={changed} />
 
+          </View>
+
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            {loading && <ActivityIndicator color={"#fff"} />}
           </View>
 
           <Grid
@@ -157,13 +164,13 @@ const DoctorNotesPatient = () => {
 
                       <TouchableOpacity
                         mode="contained"
-                        onPress={()=>press(element)}>
+                        onPress={() => press(element)}>
 
                         <Text
                           style={{ padding: 10, fontSize: 16 }}>
-                          {element}
+                          {element?.file}
                         </Text>
-                        
+
                       </TouchableOpacity>
 
                     </Col>

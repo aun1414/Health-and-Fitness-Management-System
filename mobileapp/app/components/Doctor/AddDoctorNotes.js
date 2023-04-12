@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Image, BackHandler, ImageBackground, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, ScrollView, View, StyleSheet, Image, BackHandler, ImageBackground, TouchableOpacity } from 'react-native';
 import { Text, Portal, TextInput, Provider, Modal, Button } from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +8,7 @@ import '../../file';
 import { HTTP_CLIENT_URL } from '../../url';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DatePicker from 'react-native-date-picker';
+
 
 
 const AddDoctorNotes = () => {
@@ -21,130 +22,147 @@ const AddDoctorNotes = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalMsg, setModalMsg] = React.useState("");
   const [open, setOpen] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
   //function to be called on pressing add button
   const add = () => {
-    fetch(`${HTTP_CLIENT_URL}/patient/get`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ addressid: patient }),
-    }).then(async res => {
-      //On Sucessufully returning from API collect response
-      const d1 = await res.json();
-      console.log(d1);
+    if (patient.trim() === '') {
+      setModalMsg("Patient Id is required");
+      setModalVisible(true);
 
-       //checking if the response has status ok
-      if (d1.success) {
-
-        const mypatient=d1.patient
-        console.log(mypatient)
-
-        const doctorid=await AsyncStorage.getItem('addressid');
-
-       
-        const dataToEncrypt={file: 'DoctorNote', patient: patient, doctor: doctorid, doctorNote, visitReason, date: date.toLocaleString() }
-
-        fetch(`${HTTP_CLIENT_URL}/rsa/encrypt`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ key: mypatient.publickey, dataToEncrypt }),
-        }).then(async res => {
-          //On Sucessufully returning from API collect response
-          const d1 = await res.json();
-          console.log(d1);
-    
-            //checking if the response has status ok
-          if (d1.success) {
-            fetch(`${HTTP_CLIENT_URL}/ipfs/uploadFile`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ file: "DoctorNote.json", content: d1.encryptedFile }),
-            }).then(async res => {
-              //On Sucessufully returning from API collect response
-              const d2 = await res.json();
-              console.log(d2);
-        
-                //checking if the response has status ok
-              if (d2.success) {
-                fetch(`${HTTP_CLIENT_URL}/contracts/uploadFile`, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify({ patientid: mypatient.addressid, doctorid: doctorid,  fileType: "DoctorNote", hash: d2.hashValue }),
-                }).then(async res => {
-                  //On Sucessufully returning from API collect response
-                  const d = await res.json();
-                  console.log(d);
-            
-                    //checking if the response has status ok
-                  if (d.success) {
-            
-                    setModalMsg("Doctor Note Added Succesfully");
-                    setModalVisible(true);
-                    
-            
-                  }
-                  else {
-                    console.log(d)
-                    setModalMsg("Error uploading to Blockchain");
-                    setModalVisible(true);
-                }
-                });
-                
-                
-        
-              }
-              else {
-                console.log(d2)
-                setModalMsg("Error uploading to IPFS");
-                setModalVisible(true);
-            }
-            });
-            
-            
-    
-          }
-          else {
-            console.log(d1)
-            setModalMsg("Error Encrypting File");
-            setModalVisible(true);
-        }
-        });
-            
-  
-
-      }
-      else {
-        console.log(d1)
-        setModalMsg(d1.error);
-        setModalVisible(true);
     }
-    });   
-    
+    else if (doctorNote.trim() === '') {
+      setModalMsg("Doctor Note is required");
+      setModalVisible(true);
+
+    }
+    else {
+      setLoading(true)
+      fetch(`${HTTP_CLIENT_URL}/patient/get`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addressid: patient }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        const d1 = await res.json();
+        console.log(d1);
+
+        //checking if the response has status ok
+        if (d1.success) {
+
+          const mypatient = d1.patient
+          console.log(mypatient)
+
+          const doctorid = await AsyncStorage.getItem('addressid');
+
+
+          const dataToEncrypt = { file: 'DoctorNote', patient: patient, doctor: doctorid, doctorNote, visitReason, date: date.toLocaleString() }
+
+          fetch(`${HTTP_CLIENT_URL}/rsa/encrypt`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ key: mypatient.publickey, dataToEncrypt }),
+          }).then(async res => {
+            //On Sucessufully returning from API collect response
+            const d1 = await res.json();
+            console.log(d1);
+
+            //checking if the response has status ok
+            if (d1.success) {
+              fetch(`${HTTP_CLIENT_URL}/ipfs/uploadFile`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ file: "DoctorNote.json", content: d1.encryptedFile }),
+              }).then(async res => {
+                //On Sucessufully returning from API collect response
+                const d2 = await res.json();
+                console.log(d2);
+
+                //checking if the response has status ok
+                if (d2.success) {
+                  fetch(`${HTTP_CLIENT_URL}/contracts/uploadFile`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ patientid: mypatient.addressid, doctorid: doctorid, fileType: "DoctorNote_" + date.toLocaleDateString(), hash: d2.hashValue }),
+                  }).then(async res => {
+                    //On Sucessufully returning from API collect response
+                    const d = await res.json();
+                    console.log(d);
+
+                    //checking if the response has status ok
+                    if (d.success) {
+                      setLoading(false)
+                      setModalMsg("Doctor Note Added Succesfully");
+                      setModalVisible(true);
+
+
+                    }
+                    else {
+                      setLoading(false)
+                      console.log(d)
+                      setModalMsg("Error uploading to Blockchain");
+                      setModalVisible(true);
+                    }
+                  });
+
+
+
+                }
+                else {
+                  setLoading(false)
+                  console.log(d2)
+                  setModalMsg("Error uploading to IPFS");
+                  setModalVisible(true);
+                }
+              });
+
+
+
+            }
+            else {
+              setLoading(false)
+              console.log(d1)
+              setModalMsg("Error Encrypting File");
+              setModalVisible(true);
+            }
+          });
+
+
+
+        }
+        else {
+          setLoading(false)
+          console.log(d1)
+          setModalMsg(d1.error);
+          setModalVisible(true);
+        }
+      });
+    }
   }
 
   //function to be called on closing modal displaying doctor note is added
   const ok = () => {
     //making ModalVisible false to hide the modal that doctor note is added
     setModalVisible(false);
-    if(modalMsg==="Doctor Note Added Succesfully"){
-        //navigates to doctor home page
+    if (modalMsg === "Doctor Note Added Succesfully") {
+      //navigates to doctor home page
       navigation.navigate('MainDoctor');
     }
-    
+
   }
 
 
- 
 
-  
+
+
 
 
   React.useEffect(() => {
@@ -180,7 +198,7 @@ const AddDoctorNotes = () => {
             </Button>
 
           </View>
-   
+
         </Modal>
       </Portal>
 
@@ -193,6 +211,10 @@ const AddDoctorNotes = () => {
               source={require('../../images/doctorNote.jpg')}
               style={styles.image}
             />
+
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+              {loading && <ActivityIndicator color={"#fff"} />}
+            </View>
 
             <TextInput
               label="Patient"
@@ -219,31 +241,30 @@ const AddDoctorNotes = () => {
               style={styles.textfield}
             />
 
-           
+
             <TouchableOpacity
-            onPress={() => setOpen(true)}>
-            <TextInput
-              label="Date"
-              value={date.toLocaleString()}
-              style={styles.textfield}
-            editable={false}
-            />
-            
+              onPress={() => setOpen(true)}>
+              <TextInput
+                label="Date"
+                value={date.toLocaleString()}
+                style={styles.textfield}
+                editable={false}
+              />
+
             </TouchableOpacity>
             <DatePicker
-                    modal
-                    open={open}
-                    date={date}
-                    onConfirm={(date) => {
-                    setOpen(false)
-                    setDate(date)
-                    }}
-                    onCancel={() => {
-                    setOpen(false)
-                    }}
-                />
+              modal
+              open={open}
+              date={date}
+              onConfirm={(date) => {
+                setOpen(false)
+                setDate(date)
+              }}
+              onCancel={() => {
+                setOpen(false)
+              }}
+            />
 
-         
 
 
             <Button buttonColor='royalblue' style={styles.button} mode="contained" onPress={add}>

@@ -2,6 +2,10 @@ const mongoose=require('mongoose');
 
 const doctorProfile=new mongoose.Schema(
     {
+        gender:{
+            type: String,
+            default: "male"
+        },
         experience:{
             type: Number,
             default: 0

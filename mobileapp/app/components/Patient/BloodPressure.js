@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity, Dimensions } from 'react-native';
+import { ActivityIndicator, ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity, Dimensions } from 'react-native';
 import { Text, Button, Provider, Portal, Modal, TextInput } from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
@@ -8,6 +8,7 @@ import DatePicker from 'react-native-date-picker';
 import { LineChart } from 'react-native-chart-kit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HTTP_CLIENT_URL } from '../../url';
+
 
 const BloodPressure = () => {
 
@@ -42,6 +43,7 @@ const BloodPressure = () => {
   const [systolic, setSystolic] = React.useState([120]);
   const [origDiastolic, setOrigDiastolic] = React.useState([]);
   const [origSystolic, setOrigSystolic] = React.useState([]);
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     const backAction = () => {
@@ -66,6 +68,7 @@ const BloodPressure = () => {
         setFitAuthorized("Not Authorized")
         setModalVisible(true);
         setModalMsg("App not Connected!")
+        setLoading(false)
 
       }
 
@@ -73,6 +76,7 @@ const BloodPressure = () => {
   }, [fitAuthorized]);
 
   React.useEffect(() => {
+    setLoading(true)
     GoogleFit.checkIsAuthorized().then(async () => {
       var currDate = new Date(
         date.getFullYear(),
@@ -83,7 +87,7 @@ const BloodPressure = () => {
       var lastDate = new Date(
         date.getFullYear(),
         date.getMonth(),
-        date.getDate()+1,
+        date.getDate() + 1,
       );
 
       const opt = {
@@ -94,6 +98,7 @@ const BloodPressure = () => {
       };
       var authorized = GoogleFit.isAuthorized;
       if (authorized) {
+
         console.log(date, " ", lastDate)
         const bloodpressure = await GoogleFit.getBloodPressureSamples(opt);
         setMyData(bloodpressure)
@@ -115,8 +120,12 @@ const BloodPressure = () => {
 
           console.log(s + 5)
           console.log(d - 5)
+          setLoading(false)
 
 
+        }
+        else {
+          setLoading(false)
         }
 
 
@@ -139,11 +148,13 @@ const BloodPressure = () => {
 
   const addToBlockchain = async () => {
     console.log("Length: ", origSystolic.length)
-    if (origSystolic.length === 0) {
+
+    if (myData.length === 0) {
       setModalMsg("No Data Present");
       setModalVisible(true);
     }
     else {
+      setLoading(true)
       const patientid = await AsyncStorage.getItem('addressid');
       fetch(`${HTTP_CLIENT_URL}/patient/get`, {
         method: 'POST',
@@ -160,21 +171,21 @@ const BloodPressure = () => {
         //checking if the response has status ok
         if (d1.success) {
 
-          let avgSystolic = 0
-          let avgDiastolic = 0
+          // let avgSystolic = 0
+          // let avgDiastolic = 0
 
-          for (let i = 0; i < origSystolic.length; i++) {
-            avgSystolic += origSystolic[i]
-          }
+          // for (let i = 0; i < origSystolic.length; i++) {
+          //   avgSystolic += origSystolic[i]
+          // }
 
-          for (let i = 0; i < origDiastolic.length; i++) {
-            avgDiastolic += origDiastolic[i]
-          }
+          // for (let i = 0; i < origDiastolic.length; i++) {
+          //   avgDiastolic += origDiastolic[i]
+          // }
 
-          avgSystolic=avgSystolic/origSystolic.length;
-          avgDiastolic=avgDiastolic/origDiastolic.length;
+          // avgSystolic=avgSystolic/origSystolic.length;
+          // avgDiastolic=avgDiastolic/origDiastolic.length;
 
-          const dataToEncrypt = { file: 'BloodPressure', patient: patientid, avgSystolic, avgDiastolic,  date: date.toLocaleString() }
+          const dataToEncrypt = { file: 'BloodPressure', patient: patientid, myData, date: date.toLocaleDateString() }
 
           fetch(`${HTTP_CLIENT_URL}/rsa/encrypt`, {
             method: 'POST',
@@ -207,7 +218,7 @@ const BloodPressure = () => {
                     headers: {
                       'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ patientid: patientid, fileType: "BloodPressure", hash: d2.hashValue }),
+                    body: JSON.stringify({ patientid: patientid, fileType: "BloodPressure_" + date.toLocaleDateString(), hash: d2.hashValue }),
                   }).then(async res => {
                     //On Sucessufully returning from API collect response
                     const d = await res.json();
@@ -215,11 +226,12 @@ const BloodPressure = () => {
 
                     //checking if the response has status ok
                     if (d.success) {
-
+                      setLoading(false)
                       setModalMsg("Added Succesfully");
                       setModalVisible(true);
                     }
                     else {
+                      setLoading(false)
                       console.log(d)
                       setModalMsg("Error uploading to Blockchain");
                       setModalVisible(true);
@@ -227,6 +239,7 @@ const BloodPressure = () => {
                   });
                 }
                 else {
+                  setLoading(false)
                   console.log(d2)
                   setModalMsg("Error uploading to IPFS");
                   setModalVisible(true);
@@ -234,6 +247,7 @@ const BloodPressure = () => {
               });
             }
             else {
+              setLoading(false)
               console.log(d1)
               setModalMsg("Error Encrypting File");
               setModalVisible(true);
@@ -241,6 +255,7 @@ const BloodPressure = () => {
           });
         }
         else {
+          setLoading(false)
           console.log(d1)
           setModalMsg(d1.error);
           setModalVisible(true);
@@ -288,6 +303,11 @@ const BloodPressure = () => {
             {
               fitAuthorized == "Authorized" &&
               <View>
+                
+                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                  {loading && <ActivityIndicator color={"#fff"} />}
+                </View>
+
                 <TouchableOpacity
                   onPress={() => setOpen(true)}>
                   <TextInput
@@ -297,6 +317,7 @@ const BloodPressure = () => {
                   />
 
                 </TouchableOpacity>
+
                 <DatePicker
                   modal
                   mode='date'
@@ -311,10 +332,12 @@ const BloodPressure = () => {
                   }}
                 />
 
+                
+
                 <LineChart
                   data={{
                     labels: myData.map((item) =>
-                      new Date(item.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                      new Date(item.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
                     ),
                     datasets: [
                       {
@@ -364,7 +387,7 @@ const BloodPressure = () => {
 
                 <View style={styles.rowline}>
                   <TouchableOpacity
-                  onPress={() => navigation.navigate('BloodPressureData', { date: date.toLocaleDateString(), element: myData })}>
+                    onPress={() => navigation.navigate('BloodPressureData', { date: date.toLocaleDateString(), element: myData })}>
                     <Text
                       style={styles.linktext}>
                       See All Data
@@ -373,7 +396,7 @@ const BloodPressure = () => {
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                  onPress={addToBlockchain}>
+                    onPress={addToBlockchain}>
                     <Text
                       style={styles.linktext}
                     >

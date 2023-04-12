@@ -22,12 +22,9 @@ exports.DecryptFile = async (req, res) => {
     
     const {key, dataToDecrypt} = req.body
 
-
     try {
        
         const decryptedFile=PRE.decryptData(key, JSON.parse(dataToDecrypt))
-
-
         res.json({success: true, decryptedFile})
         
     } catch (error) {
@@ -47,6 +44,8 @@ exports.ReencryptFile = async (req, res) => {
     
     var pt=JSON.parse(dataToReEncrypt)
     let rk = PRE.generateReEncrytionKey(privateKeyPatient, publickKeyDoctor);
+
+
     
     PRE.reEncryption(rk, pt)
     

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
+import { ActivityIndicator ,ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
 import { Text, TextInput, } from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
@@ -17,6 +17,7 @@ const LabResultsPatient = () => {
   const [elements, setElements] = React.useState([]);
   const [tempelements, setTempElements] = React.useState([]);
   const [search, setSearch] = React.useState('');
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     counter = 0;
@@ -52,10 +53,12 @@ const LabResultsPatient = () => {
       //On Sucessufully returning from API collect response
       const d2 = await res.json();
       console.log(d2);
+      setLoading(false)
       
         //checking if the response has status ok
       if (d2.success) {
 
+      
         setTempElements(d2.files)
         setElements(d2.files);
         
@@ -77,7 +80,7 @@ const LabResultsPatient = () => {
     console.log("E",elements)
     
     for(var i=0; i<tempelements.length; i++){
-      if(tempelements[i].includes(search)){
+      if(tempelements[i].file.includes(search)){
         temp.push(tempelements[i])
       }
     }
@@ -124,6 +127,10 @@ const LabResultsPatient = () => {
 
           </View>
 
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+              {loading && <ActivityIndicator color={"#fff"} />}
+            </View>
+
 
           <Grid
             style={{
@@ -163,7 +170,7 @@ const LabResultsPatient = () => {
                             padding: 10,
                             fontSize: 16
                           }}>
-                          {element}
+                          {element?.file}
                         </Text>
                       </TouchableOpacity>
                     </Col>

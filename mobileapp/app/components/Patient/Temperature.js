@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity, Dimensions } from 'react-native';
+import { ActivityIndicator ,ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity, Dimensions } from 'react-native';
 import { Text, Button, Provider, Portal, Modal, TextInput } from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
@@ -41,6 +41,7 @@ const Temperature = () => {
   const [times, setTimes] = React.useState([]);
   const [temperatures, setTemperatures] = React.useState([30, 40]);
   const [origTemperatures, setOrigTemperatures] = React.useState([]);
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     const backAction = () => {
@@ -72,6 +73,7 @@ const Temperature = () => {
   }, [fitAuthorized]);
 
   React.useEffect(() => {
+    setLoading(true)
     GoogleFit.checkIsAuthorized().then(async () => {
       var currDate = new Date(
         date.getFullYear(),
@@ -97,6 +99,7 @@ const Temperature = () => {
         const temperature = await GoogleFit.getBodyTemperatureSamples(opt);
         setMyData(temperature)
         console.log(temperature)
+        setLoading(false)
 
         if (temperature.length > 0) {
           const tt = temperature.map((item) => item.value)
@@ -105,6 +108,9 @@ const Temperature = () => {
         }
 
 
+      }
+      else{
+        setLoading(false)
       }
     })
 
@@ -121,12 +127,14 @@ const Temperature = () => {
   }
 
   const addToBlockchain = async () => {
+    
     console.log("Length: ", origTemperatures.length)
-    if (origTemperatures.length === 0) {
+    if (myData.length === 0) {
       setModalMsg("No Data Present");
       setModalVisible(true);
     }
     else {
+      setLoading(true)
       const patientid = await AsyncStorage.getItem('addressid');
       fetch(`${HTTP_CLIENT_URL}/patient/get`, {
         method: 'POST',
@@ -143,16 +151,16 @@ const Temperature = () => {
         //checking if the response has status ok
         if (d1.success) {
 
-          let avgTemperature = 0
+          // let avgTemperature = 0
 
-          for (let i = 0; i < origTemperatures.length; i++) {
-            avgTemperature += origTemperatures[i]
-          }
+          // for (let i = 0; i < origTemperatures.length; i++) {
+          //   avgTemperature += origTemperatures[i]
+          // }
 
 
-          avgTemperature=avgTemperature/origTemperatures.length;
+          // avgTemperature=avgTemperature/origTemperatures.length;
        
-          const dataToEncrypt = { file: 'Temperature', patient: patientid, avgTemperature, date: date.toLocaleString() }
+          const dataToEncrypt = { file: 'Temperature', patient: patientid, myData, date: date.toLocaleDateString() }
 
           fetch(`${HTTP_CLIENT_URL}/rsa/encrypt`, {
             method: 'POST',
@@ -185,7 +193,7 @@ const Temperature = () => {
                     headers: {
                       'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ patientid: patientid, fileType: "Temperature", hash: d2.hashValue }),
+                    body: JSON.stringify({ patientid: patientid, fileType: "Temperature_"+date.toLocaleDateString(), hash: d2.hashValue }),
                   }).then(async res => {
                     //On Sucessufully returning from API collect response
                     const d = await res.json();
@@ -193,11 +201,12 @@ const Temperature = () => {
 
                     //checking if the response has status ok
                     if (d.success) {
-
+                      setLoading(false)
                       setModalMsg("Added Succesfully");
                       setModalVisible(true);
                     }
                     else {
+                      setLoading(false)
                       console.log(d)
                       setModalMsg("Error uploading to Blockchain");
                       setModalVisible(true);
@@ -205,6 +214,7 @@ const Temperature = () => {
                   });
                 }
                 else {
+                  setLoading(false)
                   console.log(d2)
                   setModalMsg("Error uploading to IPFS");
                   setModalVisible(true);
@@ -212,6 +222,7 @@ const Temperature = () => {
               });
             }
             else {
+              setLoading(false)
               console.log(d1)
               setModalMsg("Error Encrypting File");
               setModalVisible(true);
@@ -219,6 +230,7 @@ const Temperature = () => {
           });
         }
         else {
+          setLoading(false)
           console.log(d1)
           setModalMsg(d1.error);
           setModalVisible(true);
@@ -266,6 +278,10 @@ const Temperature = () => {
             {
               fitAuthorized == "Authorized" &&
               <View>
+                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                  {loading && <ActivityIndicator color={"#fff"} />}
+                </View>
+
                 <TouchableOpacity
                   onPress={() => setOpen(true)}>
                   <TextInput
@@ -292,7 +308,7 @@ const Temperature = () => {
                 <LineChart
                   data={{
                     labels:
-                      myData.map((item) => new Date(item.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })),
+                      myData.map((item) => new Date(item.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })),
                     datasets: [
                       {
                         data: myData.map((item) => item.value)

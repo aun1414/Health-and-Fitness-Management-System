@@ -1,10 +1,11 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
-import { Text, TextInput } from 'react-native-paper';
+import { ActivityIndicator, ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
+import { Text, TextInput, Button, Provider, Portal, Modal, RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HTTP_CLIENT_URL } from '../../url';
+
 
 
 
@@ -14,73 +15,70 @@ const AddPermissionsPatient = () => {
   const navigation = useNavigation();
   const [elements, setElements] = React.useState([]);
   const [tempelements, setTempElements] = React.useState([]);
-  const [search, setSearch] = React.useState('');
 
- 
 
-  React.useEffect(() => { getElements(); }, [tempelements])
+  const [visibleMenu, setVisibleMenu] = React.useState(false);
+  const [type, setType] = React.useState('LabResult')
+  const [modalType, setmodalType] = React.useState('LabResult')
+  const [checkarr, setCheckArr] = React.useState([])
+  const [selected, setSelected] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
 
-  React.useEffect(() =>{
+  const openMenu = () => setVisibleMenu(true);
 
-        let temp=[]
-        setElements(temp)
-        console.log("E",tempelements)
-        console.log("E",elements)
-        
-        for(var i=0; i<tempelements.length; i++){
-          if(tempelements[i].includes(search)){
-            temp.push(tempelements[i])
-          }
-        }
+  const closeMenu = () => setVisibleMenu(false);
 
-        setElements(temp)
-        console.log("S",elements)
+  React.useEffect(() => { getElements(); }, [type])
 
-  }, [search])
-
-    //get all file hashes of patient from smartcontracts
+  
+  //get all file hashes of patient from smartcontracts
   async function getElements() {
-    const patientid =  await AsyncStorage.getItem("addressid");
+    setSelected(false)
 
-    fetch(`${HTTP_CLIENT_URL}/contracts/getFilesByPatient`, {
+    setLoading(true)
+    setElements([])
+    setCheckArr([])
+
+    const patientid = await AsyncStorage.getItem("addressid");
+
+    fetch(`${HTTP_CLIENT_URL}/contracts/getFilesbyPatientandType`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ patientid }),
+      body: JSON.stringify({ patientid, fileType: type }),
     }).then(async res => {
       //On Sucessufully returning from API collect response
       const d2 = await res.json();
-      console.log(d2);
-      
-        //checking if the response has status ok
+      console.log("Add: ", d2);
+
+      //checking if the response has status ok
       if (d2.success) {
+
+        setLoading(false)
 
         setElements(d2.files);
         setTempElements(d2.files);
 
+        let tempcheckArr = new Array(d2.files.length).fill(false);
+        setCheckArr(tempcheckArr)
+
       }
       else {
+        setLoading(false)
         console.log(d2)
-        
-    }
+
+      }
     });
 
   }
 
-  const changed = (text) => {
-    setSearch(text);
-    console.log(tempelements.length);
-    
 
-   
-
-  }
 
   //if patient wants to visit some file then go to input private key of patient
-  const visitFile = async (element) =>{
+  const visitFile = async (element) => {
 
-    const patientid =  await AsyncStorage.getItem("addressid");
+    const patientid = await AsyncStorage.getItem("addressid");
 
     fetch(`${HTTP_CLIENT_URL}/contracts/getFileType`, {
       method: 'POST',
@@ -92,149 +90,297 @@ const AddPermissionsPatient = () => {
       //On Sucessufully returning from API collect response
       const d2 = await res.json();
       console.log(d2);
-      
-        //checking if the response has status ok
+
+      //checking if the response has status ok
       if (d2.success) {
 
-        if(d2.fileType==="Medication"){
-          navigation.navigate("InputKey", {  path: 'MedicineFile', hash: element })
+        if (d2.fileType.startsWith("Medication")) {
+          navigation.navigate("InputKey", { path: 'MedicineFile', hash: element })
 
         }
-        else if(d2.fileType==="DoctorNote"){
+        else if (d2.fileType.startsWith("DoctorNote")) {
           navigation.navigate("InputKey", { path: 'DoctorNoteFile', hash: element })
 
         }
-        else if(d2.fileType==="LabResult"){
+        else if (d2.fileType.startsWith("LabResult")) {
           navigation.navigate("InputKey", { path: 'LabResultFile', hash: element })
 
         }
-        else if(d2.fileType==="BloodPressure"){
+        else if (d2.fileType.startsWith("BloodPressure")) {
           navigation.navigate("InputKey", { path: 'BloodPressureFile', hash: element })
 
         }
-        else if(d2.fileType==="HeartRate"){
+        else if (d2.fileType.startsWith("HeartRate")) {
           navigation.navigate("InputKey", { path: 'HeartRateFile', hash: element })
 
         }
-        else if(d2.fileType==="Temperature"){
+        else if (d2.fileType.startsWith("Temperature")) {
           navigation.navigate("InputKey", { path: 'TemperatureFile', hash: element })
 
         }
-        
-
       }
       else {
         console.log(d2)
-        
-    }
+      }
     });
 
   }
 
+  const okType = () => {
+    setType(modalType)
+    closeMenu()
+  }
+
+
+
+  const changeCheckValue = (i) => {
+    let arr = checkarr
+    if(arr[i]===false){
+      arr[i]=true
+    }
+    else{
+      arr[i]=false
+    }
+    setCheckArr([...arr])
+
+    let find = false
+    for (var i = 0; i < arr.length; i++) {
+      if(arr[i]===true){
+        find=true
+        break
+      }
+      
+    }
+    setSelected(find)
+
+    console.log("Index: ", checkarr)
+  }
+
+  const grantAccess = () =>{
+
+    let accessArr = []
+
+    for(let i=0; i<checkarr.length; i++){
+      if(checkarr[i]===true){
+        accessArr.push(elements[i])
+      }
+
+    }
+    navigation.navigate('GrantPermissionPatient', { paramKey: accessArr })
+  }
+
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require('../../images/appBack.jpg')}
-        resizeMode="cover"
-        style={{ height: '100%' }}>
+    <Provider>
+      <Portal>
+        <Modal
+          visible={visibleMenu}
+          onDismiss={closeMenu}
+          contentContainerStyle={styles.modalAge}>
+          <ScrollView>
 
-        <ScrollView
-          style={{ marginTop: 10 }}>
+            <RadioButton.Group
+              onValueChange={value => setmodalType(value)}
+              value={modalType}>
+              <RadioButton.Item label="Medication" value="Medication" />
+              <RadioButton.Item label="Lab Result" value="LabResult" />
+              <RadioButton.Item label="Doctor Note" value="DoctorNote" />
+              <RadioButton.Item label="Heart Rate" value="HeartRate" />
+              <RadioButton.Item label="Blood Pressure" value="BloodPressure" />
+              <RadioButton.Item label="Temperature" value="Temperature" />
 
-          <View
-            style={{
-              flex: 1,
-              flexDirection: 'row',
-              justifyContent: 'center'
-            }}>
+            </RadioButton.Group>
 
-            {/* <TextInput
-              style={styles.texfield}
-              placeholder='Search...'
+
+            <Button
+              mode='contained'
+              buttonColor='#00ced1'
+              style={styles.okbutton}
+              onPress={okType}>
+              Ok
+            </Button>
+            <Button
               mode='outlined'
-              value={search}
-              onChangeText={changed} /> */}
+              style={styles.cancelbutton}
+              onPress={closeMenu}>
+              Cancel
+            </Button>
+          </ScrollView>
 
+
+        </Modal>
+      </Portal>
+      <View style={styles.container}>
+        <ImageBackground
+          source={require('../../images/appBack.jpg')}
+          resizeMode="cover"
+          style={{ height: '100%' }}>
+
+          <ScrollView
+            style={{ marginTop: 10 }}>
+
+            <View
+              style={{
+                flex: 1
+              }}>
+
+              <TouchableOpacity
+                onPress={openMenu}>
+                <TextInput
+                  value={type}
+                  style={styles.textfield}
+                  editable={false}
+                />
+
+              </TouchableOpacity>
+
+            </View>
+
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+              {loading && <ActivityIndicator color={"#fff"} />}
+            </View>
+            
+            <Grid
+              style={{
+                marginTop: 10,
+                marginHorizontal: 10
+              }}>
+
+              <Col size={15}>
+
+                <Row
+                  style={styles.bordered2}>
+                  <Text style={{ fontWeight: 'bold' }}>
+                  </Text>
+                </Row>
+               
+                {
+                  checkarr.map((checked, index) => (
+                    <Row
+                      style={styles.bordered1}
+                      key={index}>
+                      <TouchableOpacity onPress={() => changeCheckValue(index)}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <View
+                            style={{
+                              height: 20,
+                              width: 20,
+                              borderRadius: 10,
+                              borderWidth: 2,
+                              borderColor: checkarr[index] ? '#007AFF' : '#C7C7CC',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              marginRight: 10,
+                            }}>
+                            
+                             
+                            {checkarr[index] && (
+                              <View
+                                style={{
+                                  height: 14,
+                                  width: 14,
+                                  borderRadius: 7,
+                                  backgroundColor: '#007AFF',
+                                }} 
+                              >
+                                </View>
+                            )}
+                          </View>
+                         
+                        </View>
+                      </TouchableOpacity>
+
+                    </Row>
+                  )
+                  )}
+              </Col>
+
+              <Col size={40}>
+
+                <Row
+                  style={styles.bordered2}>
+                  <Text style={{ fontWeight: 'bold' }}>
+                    File
+                  </Text>
+                </Row>
+
+                {
+                  elements.map(element => (
+
+                    <Row
+                      style={styles.bordered1}
+                      key={element.file}>
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minHeight: 30,
+                          width: '90%'
+                        }}
+                        >
+                        <Text style={{  padding: 10 }}
+                        onPress={() => visitFile(element?.file)}>
+                          {element?.file}
+                        </Text>
+                      </View>
+                    </Row>
+
+                  )
+                  )}
+              </Col>
+
+              <Col size={35}>
+
+                <Row
+                  style={styles.bordered2}>
+                  <Text style={{ fontWeight: 'bold' }}>
+                    Date(mm/dd/yyyy)
+                  </Text>
+                </Row>
+
+                {
+                  elements.map(element => (
+
+                    <Row
+                      style={styles.bordered1}
+                      key={element.file}>
+                      <View
+                        style={{
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          minHeight: 30,
+                          width: '90%'
+                        }}
+                      >
+                        <Text style={{ padding: 10 }}>
+                          {element?.fileDate}
+                        </Text>
+                      </View>
+                    </Row>
+
+                  )
+                  )}
+              </Col>
+
+             
+
+            </Grid>
+          </ScrollView>
+          {selected &&
+          <View style={{height: 40, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly',
+          alignItems: 'center'}}>
+            <TouchableOpacity style={{borderColor: 'blue', borderWidth: 2, padding : 8}} onPress={grantAccess}>
+              <Text style={{color: 'blue'}}>Grant Access</Text>
+              </TouchableOpacity>
+            <TouchableOpacity style={{borderColor: 'blue', borderWidth: 2, padding : 8}}>
+              <Text style={{color: 'blue'}}>View Files</Text>
+            </TouchableOpacity>
           </View>
 
-          <Grid
-            style={{
-              marginTop: 30,
-              marginHorizontal: 10
-            }}>
+          }
+        </ImageBackground>
 
-            <Col>
-
-              <Row
-                style={styles.bordered2}>
-                <Text style={{ fontWeight: 'bold' }}>
-                  File
-                </Text>
-              </Row>
-
-              {
-                elements.map(element => (
-
-                  <Row
-                    style={styles.bordered1}
-                    key={element.file}>
-                    <TouchableOpacity
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        minHeight: 30,
-                        width: '90%'
-                      }}
-                      mode="contained"
-                      onPress={() => visitFile(element)}>
-                      <Text style={{ padding: 10 }}>
-                        {element}
-                      </Text>
-                    </TouchableOpacity>
-                  </Row>
-
-                )
-                )}
-            </Col>
-
-            <Col>
-              <Row style={styles.bordered2}><Text style={{ fontWeight: 'bold' }}>Access</Text></Row>
-              {
-                elements.map(element => (
-                  <Row
-                    style={styles.bordered1}
-                    key={element.file}>
-
-                    <TouchableOpacity
-                      style={{
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        minHeight: 30,
-                        width: '90%'
-                      }}
-                      mode="contained"
-                      onPress={() => navigation.navigate('GrantPermissionPatient', { paramKey: element })}>
-
-                      <Text
-                        style={{
-                          color: 'blue',
-                          padding: 10
-                        }}>
-                        Grant Access
-                      </Text>
-                      
-                    </TouchableOpacity>
-                  </Row>
-
-                )
-                )}
-            </Col>
-
-          </Grid>
-        </ScrollView>
-      </ImageBackground>
-
-    </View>
+      </View>
+    </Provider>
   );
 
 };
@@ -285,8 +431,30 @@ const styles = StyleSheet.create({
 
     alignItems: 'center'
 
-  }
+  },
+  modalAge: {
+    backgroundColor: 'white',
+    width: '90%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    padding: 20,
+    borderRadius: 10
 
+  },
+  okbutton: {
+    margin: 10,
+
+  },
+  textfield: {
+    marginHorizontal: '2%',
+    textAlign: 'center',
+    backgroundColor: 'white',
+    width: '96%'
+  },
+  cancelbutton: {
+    margin: 10,
+
+  }
 
 });
 

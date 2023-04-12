@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Grid, Row, Col } from 'react-native-paper-grid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HTTP_CLIENT_URL } from '../../url';
+import { transformFileAsync } from '@babel/core';
 
 
 const ProfileDoctor = () => {
@@ -21,30 +22,30 @@ const ProfileDoctor = () => {
   const [doctorName, setDoctorName] = React.useState("");
   const [addressId, setAddressId] = React.useState("");
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     start()
   },
-  [gender])
+    [gender])
 
 
   // get doctor account information from database
-  const start = async() =>{
-    try{
+  const start = async () => {
+    try {
       const addressid = await AsyncStorage.getItem("addressid");
-      
+
       const response = fetch(`${HTTP_CLIENT_URL}/doctorProfile/get`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({addressid}),
+        body: JSON.stringify({ addressid }),
       }).then(async res => {
         //On Sucessufully returning from API collect response
         console.log(res);
         const d = await res.json();
-        
-  
-         //checking if the response has status ok
+
+
+        //checking if the response has status ok
         if (d.success) {
           console.log(d);
           setDoctorName(d.doctorProfile.doctor.name);
@@ -52,9 +53,10 @@ const ProfileDoctor = () => {
           setEducation(d.doctorProfile.education)
           setSpecialization(d.doctorProfile.specialization);
           setExperience(d.doctorProfile.experience)
-      
+          setGender(d.doctorProfile.gender)
+
         }
-        
+
       });
     }
     catch (error) {
@@ -69,9 +71,9 @@ const ProfileDoctor = () => {
       "",
     );
     await AsyncStorage.setItem(
-        'isdoctorloggedIn',
-        "0",
-      );
+      'isdoctorloggedIn',
+      "0",
+    );
     navigation.navigate('StartPage');
   }
 
@@ -82,9 +84,32 @@ const ProfileDoctor = () => {
   const hideModalGender = () => {
     setvisibleGender(false);
   }
-  const okGender = () => {
+  const okGender = async () => {
     setGender(modalGender);
     setvisibleGender(false);
+
+    try {
+      const addressid = await AsyncStorage.getItem("addressid");
+      const response = fetch(`${HTTP_CLIENT_URL}/doctorProfile/updateGender`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addressid, gender: modalGender }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        console.log(res);
+        const d = await res.json();
+        //checking if the response has status ok
+        if (d.success) {
+          console.log(d);
+        }
+
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
 
   }
 
@@ -105,9 +130,33 @@ const ProfileDoctor = () => {
   const hideModalEducation = () => {
     setvisibleEducation(false);
   }
-  const okEducation = () => {
+  const okEducation = async () => {
     setEducation(modalEducation);
     setvisibleEducation(false);
+
+    try {
+
+      const addressid = await AsyncStorage.getItem("addressid");
+      const response = fetch(`${HTTP_CLIENT_URL}/doctorProfile/updateEducation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addressid, education: modalEducation }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        console.log(res);
+        const d = await res.json();
+        //checking if the response has status ok
+        if (d.success) {
+          console.log(d);
+        }
+
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
 
   }
 
@@ -123,9 +172,33 @@ const ProfileDoctor = () => {
   const hideModalSpecialization = () => {
     setvisibleSpecialization(false);
   }
-  const okSpecialization = () => {
+  const okSpecialization = async () => {
     setSpecialization(modalSpecialization);
     setvisibleSpecialization(false);
+
+    try {
+
+      const addressid = await AsyncStorage.getItem("addressid");
+      const response = fetch(`${HTTP_CLIENT_URL}/doctorProfile/updateSpecialization`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addressid, specialization: modalSpecialization }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        console.log(res);
+        const d = await res.json();
+        //checking if the response has status ok
+        if (d.success) {
+          console.log(d);
+        }
+
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
 
   }
 
@@ -145,9 +218,32 @@ const ProfileDoctor = () => {
   const hideModalExperience = () => {
     setvisibleExperience(false);
   }
-  const okExperience = () => {
+  const okExperience = async () => {
     setExperience(modalExperience);
     setvisibleExperience(false);
+
+    try {
+      const addressid = await AsyncStorage.getItem("addressid");
+      const response = fetch(`${HTTP_CLIENT_URL}/doctorProfile/updateExperience`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addressid, experience: modalExperience }),
+      }).then(async res => {
+        //On Sucessufully returning from API collect response
+        console.log(res);
+        const d = await res.json();
+        //checking if the response has status ok
+        if (d.success) {
+          console.log(d);
+        }
+
+      });
+    }
+    catch (error) {
+      console.log(error);
+    }
 
   }
 
@@ -323,6 +419,26 @@ const ProfileDoctor = () => {
               variant="titleMedium">
               {addressId}
             </Text>
+
+            <TouchableOpacity
+              style={styles.grid1}
+              activeOpacity={1}
+              onPress={showModalGender}>
+              <Grid style={styles.mainGrid1}>
+                <Row>
+                  <Col>
+                    <Text style={styles.ColGridLeft}>
+                      Gender
+                    </Text>
+                  </Col>
+                  <Col>
+                    <Text style={styles.ColGridRight}>
+                      {gender}
+                    </Text>
+                  </Col>
+                </Row>
+              </Grid>
+            </TouchableOpacity>
 
 
             <TouchableOpacity

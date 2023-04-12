@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
 import { Text,  TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
@@ -11,17 +11,15 @@ const RevokePermissions = () => {
 
   //declare state variables
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
   const [elements, setElements] = React.useState([]);
-  const [search, setSearch] = React.useState('');
+  const [type, setType] = React.useState('LabResult')
+
+  const [loading, setLoading] = React.useState(false)
 
     
     React.useEffect(() => {
-      
-      console.log("Focus: ", isFocused)
       getElements();
-      
-    }, [elements])
+    }, [type])
 
 
   
@@ -31,6 +29,8 @@ const RevokePermissions = () => {
   //get all files of patients for which he/she has given permission
   async function getElements() {
     const patientid =  await AsyncStorage.getItem("addressid");
+
+    setLoading(true)
 
     fetch(`${HTTP_CLIENT_URL}/contracts/getPermissionedFilesByPatient`, {
       method: 'POST',
@@ -42,6 +42,7 @@ const RevokePermissions = () => {
       //On Sucessufully returning from API collect response
       const d2 = await res.json();
       console.log(d2);
+
       
         //checking if the response has status ok
       if (d2.success) {
@@ -62,9 +63,11 @@ const RevokePermissions = () => {
             console.log("Temp: ",tempArr)
             const d = await res1.json();
             
+            
       
              //checking if the response has status ok
             if (d.success) {
+              
               console.log(d);
               console.log(tempArr[i])
               tempArr[i]["doctorName"]=d.doctor.name;
@@ -75,25 +78,17 @@ const RevokePermissions = () => {
           });
         }
         setElements(tempArr);
-        
-       
-
+        setLoading(false)
       }
       else {
-        console.log(d2)
-        
+        setLoading(false)
+        console.log(d2)     
     }
     });
 
 
   }
 
-  const changed = (text) => {
-    setSearch(text);
-    console.log(text);
-    
-
-  }
 
   //revoke permission on a file
   const revoke = async (element) =>{
@@ -113,9 +108,7 @@ const RevokePermissions = () => {
 
         //checking if the response has status ok
       if (d.success) {
-
         getElements();
-  
       }
       else {
         console.log(element)
@@ -182,13 +175,12 @@ const RevokePermissions = () => {
               justifyContent: 'center'
             }}>
 
-            {/* <TextInput
-              style={styles.texfield}
-              placeholder='Search...'
-              mode='outlined'
-              value={search}
-              onChangeText={changed} /> */}
+            
           </View>
+
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+              {loading && <ActivityIndicator color={"#fff"} />}
+            </View>
 
           <Grid
             style={{

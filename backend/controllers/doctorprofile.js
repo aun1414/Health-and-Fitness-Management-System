@@ -29,11 +29,40 @@ exports.getDoctorProfile = async (req, res) => {
 
 }
 
+
 //update education of doctor in database
 exports.updateEducation = async (req, res) => {
 
     try{
         const {addressid, education} = req.body
+        const doctor = await Doctor.findOne({addressid});
+
+        if(!doctor){
+            return sendError(res, "Doctor id not registered");
+        }
+        else{
+            const newRecord = await DoctorProfile.updateOne({
+                doctor: doctor._id
+            },
+            {
+                $set:{
+                    education: education
+                }
+            });
+            res.json({success: true, newRecord})
+        }
+    }
+    catch (error) {
+        res.json({success: false})
+    }
+}
+
+//update Gender of doctor in database
+exports.updateGender = async (req, res) => {
+
+
+    try{
+        const {addressid, gender} = req.body
         const doctor = await Doctor.findOne({addressid});
 
         if(!doctor){

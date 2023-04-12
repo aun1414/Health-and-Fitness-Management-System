@@ -26,6 +26,8 @@ exports.getFile = async (req, res) => {
             //creating ipfs object
             ipfs = await ipfsClient();
 
+         
+
             //getting file having same hash as provided in request body
             let file = await ipfs.cat(req.body.h)
             
@@ -39,9 +41,11 @@ exports.getFile = async (req, res) => {
             }
 
             
+            
 
             //resturn file content
             res.status(200).json({success: true, data: data});
+            // res.send({ title: 'GeeksforGeeks' });
         }
         catch(err){
             //on error return status fail

@@ -10,6 +10,12 @@ import LabResultsFile from './LabResultFile';
 import { Alert, BackHandler, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import RevokePermissions from './RevokePermissions';
+import BloodPressureFile from './BloodPressureFile';
+import HeartRateFile from './HeartRateFile';
+import TemperatureFile from './TemperatureFile';
+import DataHeartRate from './DataHeartRate'
+import DataBloodPressure from './DataBloodPressure';
+import DataTemperature from './DataTemperature';
 
 const Stack = createNativeStackNavigator();
 const AddPermissionPatient = () => {
@@ -58,6 +64,12 @@ const AddPermissionPatient = () => {
         <Stack.Screen name='MedicineFile' component={MedicineFile} />
         <Stack.Screen name='DoctorNoteFile' component={DoctorNoteFile} />
         <Stack.Screen name='LabResultFile' component={LabResultsFile} />
+        <Stack.Screen name='BloodPressureFile' component={BloodPressureFile} />
+        <Stack.Screen name='HeartRateFile' component={HeartRateFile} />
+        <Stack.Screen name='TemperatureFile' component={TemperatureFile} />
+        <Stack.Screen name='DataHeartRate' component={DataHeartRate} />
+        <Stack.Screen name='DataBloodPressure' component={DataBloodPressure} />
+        <Stack.Screen name='DataTemperature' component={DataTemperature} />
       </Stack.Navigator>
     </NavigationContainer>
   );

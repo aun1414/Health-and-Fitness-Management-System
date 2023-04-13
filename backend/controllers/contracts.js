@@ -4,309 +4,317 @@ const { sendError } = require('../utils/helper');
 
 //adding new doctor to the contract
 exports.addDoctor = async (req, res) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+        }
+
+        const { addressid } = req.body
+        const role = "Doctor"
+
+        const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
+
+        await roleContract.methods.addDoctor(addressid, role).send({ from: addressid, gas: 900000 })
+
+        res.json({ success: true })
     }
-
-    const {addressid} = req.body
-    const role="Doctor"
-
-    const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
-
-    await roleContract.methods.addDoctor(addressid,role).send({from: addressid, gas:300000})
-
-    res.json({success: true})
-}
-catch (error) {
-    res.json({success: false})
-}
+    catch (error) {
+        res.json({ success: false })
+    }
 }
 
 //adding new patient to the contract
 exports.addPatient = async (req, res) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+        }
+
+        const { addressid } = req.body
+        const role = "Patient"
+
+
+        const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
+
+        await roleContract.methods.addPatient(addressid, role).send({ from: addressid, gas: 900000 })
+
+        res.json({ success: true })
     }
-
-    const {addressid} = req.body
-    const role="Patient"
-    
-
-    const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
-
-    await roleContract.methods.addPatient(addressid,role).send({from: addressid, gas:300000})
-
-    res.json({success: true})
-}
-catch (error) {
-    res.json({success: false})
-}
+    catch (error) {
+        res.json({ success: false })
+    }
 }
 
 //signin doctor usinsg roles contract
 exports.signinDoctor = async (req, res) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+        }
+
+        const { addressid } = req.body
+
+        const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
+
+        await roleContract.methods.loginDoctor(addressid).call({ from: addressid, gas: 900000 }).then((resp) => {
+            if (resp) {
+                res.json({ success: true })
+            }
+            else {
+                return sendError(res, "Id not registered");
+            }
+        })
     }
-
-    const {addressid } = req.body    
-
-    const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
-
-    await roleContract.methods.loginDoctor(addressid).call({from: addressid, gas:300000}).then((resp) =>{
-        if(resp){
-            res.json({success: true})
-        }
-        else{
-            return sendError(res, "Id not registered");
-        }
-    })
-}
-catch (error) {
-    res.json({success: false})
-}
+    catch (error) {
+        res.json({ success: false })
+    }
 }
 
 //signin patient using roles contract
 exports.signinPatient = async (req, res) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
-    }
-
-    const {addressid } = req.body
-
-    const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
-
-    await roleContract.methods.loginPatient(addressid).call({from: addressid, gas:300000}).then((resp) =>{
-        if(resp){
-            res.json({success: true})
-        }
-        else{
-            return sendError(res, "Id not registered");
-        }
-    })
-}
-catch (error) {
-    res.json({success: false})
-}
-}
-
-exports.uploadVitals = async(req, res) => {
-    try{
+    try {
         if (typeof web3 !== 'undefined') {
-            var web3 = new Web3(web3.currentProvider); 
+            var web3 = new Web3(web3.currentProvider);
         } else {
             var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
         }
-    
-        const {patientid, fileType, hash} = req.body
-        
-    
-        const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
-    
-        await ipfsContract.methods.setVitalFile(hash, patientid, fileType).send({from: patientid, gas:900000})
-        res.json({success: true})
+
+        const { addressid } = req.body
+
+        const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
+
+        await roleContract.methods.loginPatient(addressid).call({ from: addressid, gas: 900000 }).then((resp) => {
+            if (resp) {
+                res.json({ success: true })
+            }
+            else {
+                return sendError(res, "Id not registered");
+            }
+        })
     }
     catch (error) {
-        res.json({success: false})
+        res.json({ success: false })
+    }
+}
+
+exports.uploadVitals = async (req, res) => {
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+        }
+
+        const { patientid, fileType, hash } = req.body
+
+
+        const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
+
+        await ipfsContract.methods.setVitalFile(hash, patientid, fileType).send({ from: patientid, gas: 900000 })
+        res.json({ success: true })
+    }
+    catch (error) {
+        res.json({ success: false })
     }
 }
 
 //upload file to ipfs and permission contract
 exports.uploadFile = async (req, res) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+        }
+
+        const { patientid, doctorid, fileType, hash } = req.body
+
+
+        const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
+
+        await ipfsContract.methods.setFile(hash, patientid, fileType, doctorid).send({ from: doctorid, gas: 900000 })
+        res.json({ success: true })
     }
-
-    const {patientid, doctorid, fileType, hash} = req.body
-    
-
-    const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
-
-    await ipfsContract.methods.setFile(hash, patientid, fileType, doctorid).send({from: doctorid, gas:900000})
-    res.json({success: true})
-}
-catch (error) {
-    res.json({success: false})
-}
+    catch (error) {
+        res.json({ success: false })
+    }
 }
 
 //get all file hashes of a patient from contracts having certain type
 exports.getAllFilesByPatientandType = async (req, resp) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
-    }
-
-    const {patientid, fileType} = req.body
-    
-
-    const permissionContract = new web3.eth.Contract(SIMP_STORAGE_PERMISSIONS_ABI, SIMP_STORAGE_PERMISSIONS_ADDRESS);
-    const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
-
-    var files=[]
-
-    await permissionContract.methods.getAllFilesbyPatient(patientid).call({from: patientid, gas:300000}).then(async (res) =>{
-        
-
-        for(var i=0; i<res.length; i++){
-           await ipfsContract.methods.getFileNumByID(res[i]).call({from: patientid, gas:300000}).then(async (response)=>{
-
-            await ipfsContract.methods.getFileType(response).call({from: patientid, gas:300000}).then(async (res1)=>{
-                if(res1.startsWith(fileType)){
-                    const typeDate = res1.split("_")
-                    files.push({file:res[i], fileType: typeDate[0], fileDate: typeDate[1]});
-                }
-            })
-
-           })
-
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
         }
 
-        files.reverse()
+        const { patientid, fileType } = req.body
 
-        resp.json({success: true, files})
 
-    
-    })
-}
-catch (error) {
-    resp.json({success: false})
-}
+        const permissionContract = new web3.eth.Contract(SIMP_STORAGE_PERMISSIONS_ABI, SIMP_STORAGE_PERMISSIONS_ADDRESS);
+        const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
+
+        var files = []
+
+        await permissionContract.methods.getAllFilesbyPatient(patientid).call({ from: patientid, gas: 900000 }).then(async (res) => {
+
+
+            for (var i = 0; i < res.length; i++) {
+                await ipfsContract.methods.getFileNumByID(res[i]).call({ from: patientid, gas: 900000 }).then(async (response) => {
+
+                    await ipfsContract.methods.getFileType(response).call({ from: patientid, gas: 900000 }).then(async (res1) => {
+                        if (res1.startsWith(fileType)) {
+                            const typeDate = res1.split("_")
+                            files.push({ file: res[i], fileType: typeDate[0], fileDate: typeDate[1] });
+                        }
+                    })
+
+                })
+
+            }
+
+            files.reverse()
+
+            resp.json({ success: true, files })
+
+
+        })
+    }
+    catch (error) {
+        resp.json({ success: false })
+    }
 }
 
 //get all file hashes of a patient from contracts
 exports.getAllFilesByPatient = async (req, resp) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
-    }
-
-    const {patientid} = req.body
-    
-
-    const permissionContract = new web3.eth.Contract(SIMP_STORAGE_PERMISSIONS_ABI, SIMP_STORAGE_PERMISSIONS_ADDRESS);
- 
-    var files=[]
-
-    await permissionContract.methods.getAllFilesbyPatient(patientid).call({from: patientid, gas:300000}).then(async (res) =>{
-        
-
-        for(var i=0; i<res.length; i++){
-            files.push(res[i]);
-
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
         }
 
-        resp.json({success: true, files})
+        const { patientid } = req.body
 
-    
-    })
 
-}
-catch (error) {
-    resp.json({success: false})
-}
+        const permissionContract = new web3.eth.Contract(SIMP_STORAGE_PERMISSIONS_ABI, SIMP_STORAGE_PERMISSIONS_ADDRESS);
+
+        var files = []
+
+        await permissionContract.methods.getAllFilesbyPatient(patientid).call({ from: patientid, gas: 900000 }).then(async (res) => {
+
+
+            for (var i = 0; i < res.length; i++) {
+                files.push(res[i]);
+
+            }
+
+            resp.json({ success: true, files })
+
+
+        })
+
+    }
+    catch (error) {
+        resp.json({ success: false })
+    }
 
 
 }
 
 //get type of file against a file hash from contracts
 exports.getFileType = async (req, resp) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+        }
+
+        const { patientid, fileId } = req.body
+
+
+        const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
+
+
+        await ipfsContract.methods.getFileNumByID(fileId).call({ from: patientid, gas: 900000 }).then(async (response) => {
+
+            await ipfsContract.methods.getFileType(response).call({ from: patientid, gas: 900000 }).then(async (res1) => {
+                resp.json({ success: true, fileType: res1 })
+
+            })
+
+
+        })
     }
-
-    const {patientid,fileId} = req.body
-
-
-    const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
-
-
-    await ipfsContract.methods.getFileNumByID(fileId).call({from: patientid, gas:300000}).then(async (response)=>{
-
-    await ipfsContract.methods.getFileType(response).call({from: patientid, gas:300000}).then(async (res1)=>{
-        resp.json({success: true, fileType: res1})
-
-    })
-
-    
-    })
-}
-catch (error) {
-    resp.json({success: false})
-}
+    catch (error) {
+        resp.json({ success: false })
+    }
 }
 
 //get all file hashes of a patient for which he/she have given permission to some doctor from contracts
 exports.getAllPermissionedFilesByPatient = async (req, resp) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
-    }
-
-    const {patientid} = req.body
-    
-
-    const permissionContract = new web3.eth.Contract(SIMP_STORAGE_PERMISSIONS_ABI, SIMP_STORAGE_PERMISSIONS_ADDRESS);
-   
-    const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
-
-    
-    const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
-
-
-    var files=[]
-
-    await permissionContract.methods.getAllFilesbyPatient(patientid).call({from: patientid, gas:300000}).then(async (res) =>{
-        
-
-        for(var i=0; i<res.length; i++){
-        
-            await roleContract.methods.getAllDoctors().call({from: patientid}).then(async (doctorsArr)=>{
-
-                for(var j=0; j<doctorsArr.length; j++){
-                    const perm = await ipfsContract.methods.getPermission(res[i], doctorsArr[j]).call()
-                    if(perm){
-                        files.push({file: res[i], doctor: doctorsArr[j]});
-                        
-                    }
-                }
-            })
-
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
         }
 
-        resp.json({success: true, files})
+        const { patientid, fileType } = req.body
 
-    
-    })
-}
-catch (error) {
-    resp.json({success: false})
-}
+
+        const permissionContract = new web3.eth.Contract(SIMP_STORAGE_PERMISSIONS_ABI, SIMP_STORAGE_PERMISSIONS_ADDRESS);
+
+        const roleContract = new web3.eth.Contract(SIMP_STORAGE_ROLES_ABI, SIMP_STORAGE_ROLES_ADDRESS);
+
+
+        const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
+
+
+        var files = []
+
+        await permissionContract.methods.getAllFilesbyPatient(patientid).call({ from: patientid, gas: 900000 }).then(async (res) => {
+
+            for (var i = 0; i < res.length; i++) {
+
+                await ipfsContract.methods.getFileNumByID(res[i]).call({ from: patientid, gas: 900000 }).then(async (response) => {
+
+                    await ipfsContract.methods.getFileType(response).call({ from: patientid, gas: 900000 }).then(async (res1) => {
+
+                        if (res1.startsWith(fileType)) {
+                            await roleContract.methods.getAllDoctors().call({ from: patientid }).then(async (doctorsArr) => {
+
+                                for (var j = 0; j < doctorsArr.length; j++) {
+                                    const perm = await ipfsContract.methods.getPermission(res[i], doctorsArr[j]).call()
+                                    const typeDate = res1.split("_")
+                                    if (perm) {
+                                        files.push({ file: res[i], doctor: doctorsArr[j], fileType: typeDate[0], fileDate: typeDate[1] });
+
+                                    }
+                                }
+                            })
+                        }
+                    })
+                })
+
+            }
+
+            resp.json({ success: true, files })
+
+
+        })
+    }
+    catch (error) {
+        resp.json({ success: false })
+    }
 
 
 }
@@ -314,51 +322,54 @@ catch (error) {
 
 //get all file hashes whom the doctor has permission to from contracts
 exports.getAllPermissionedFilesByDoctor = async (req, resp) => {
-    try{
-    if (typeof web3 !== 'undefined') {
-        var web3 = new Web3(web3.currentProvider); 
-    } else {
-        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
-    }
-
-    const {doctorid} = req.body
-    
-
-    const permissionContract = new web3.eth.Contract(SIMP_STORAGE_PERMISSIONS_ABI, SIMP_STORAGE_PERMISSIONS_ADDRESS);
-   
-    const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
-
-
-    var files=[]
-
-    await permissionContract.methods.getPermissionFilesbyDoctor(doctorid).call({from: doctorid, gas:300000}).then(async (res) =>{
-        
-
-        for(var i=0; i<res.length; i++){
-            await permissionContract.methods.getFilesHashByPermissionedHash(res[i], doctorid).call({from: doctorid, gas:300000}).then(async (response)=>{
-
-                await ipfsContract.methods.getFileNumByID(response).call({from: doctorid, gas:300000}).then(async (response1)=>{
-
-                    await ipfsContract.methods.getFileType(response1).call({from: doctorid, gas:300000}).then(async (res1)=>{
-        
-                            files.push({file: res[i], fileHash:response, type: res1})
-                    })
-                })
-    
-    
-               })
-            
-
+    try {
+        if (typeof web3 !== 'undefined') {
+            var web3 = new Web3(web3.currentProvider);
+        } else {
+            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
         }
 
-        resp.json({success: true, files})
+        const { doctorid, fileType } = req.body
 
-    
-    })
-}
-catch (error) {
-    resp.json({success: false})
-}
+
+        const permissionContract = new web3.eth.Contract(SIMP_STORAGE_PERMISSIONS_ABI, SIMP_STORAGE_PERMISSIONS_ADDRESS);
+
+        const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
+
+
+        var files = []
+
+        await permissionContract.methods.getPermissionFilesbyDoctor(doctorid).call({ from: doctorid, gas: 900000 }).then(async (res) => {
+
+
+            for (var i = 0; i < res.length; i++) {
+                await permissionContract.methods.getFilesHashByPermissionedHash(res[i], doctorid).call({ from: doctorid, gas: 900000 }).then(async (response) => {
+
+                    await ipfsContract.methods.getFileNumByID(response).call({ from: doctorid, gas: 900000 }).then(async (response1) => {
+
+                        await ipfsContract.methods.getFileType(response1).call({ from: doctorid, gas: 900000 }).then(async (res1) => {
+                            if (res1.startsWith(fileType)) {
+                           
+                            const typeDate = res1.split("_")
+                            files.push({ file: res[i], fileHash: response, type: typeDate[0], date: typeDate[1] })
+                            }
+                        })
+                    })
+
+
+                })
+
+
+            }
+
+            resp.json({ success: true, files })
+
+
+        })
+    }
+    catch (error) {
+        resp.json({ success: false })
+    }
 
 
 }
@@ -368,26 +379,29 @@ exports.grantPermission = async (req, res) => {
     try {
 
         if (typeof web3 !== 'undefined') {
-            var web3 = new Web3(web3.currentProvider); 
+            var web3 = new Web3(web3.currentProvider);
         } else {
             var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
         }
-    
-        const {patientid, doctorid, fileId, pHash} = req.body
-      
-     
-    
+
+        const { patientid, doctorid, fileId, pHash } = req.body
+
+
+
         const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
-    
-        await ipfsContract.methods.grantPermission(fileId,doctorid, pHash).send({from: patientid, gas:300000})
-    
-        res.json({success: true})
-        
+
+        console.log(patientid, fileId, doctorid, pHash)
+
+        await ipfsContract.methods.grantPermission(fileId, doctorid, pHash).send({ from: patientid, gas: 900000 })
+
+        res.json({ success: true })
+
     } catch (error) {
-        res.json({success: false})
-        
+        console.log(error)
+        res.json({ success: false })
+
     }
-    
+
 }
 
 //revoke permission of a file from a doctor
@@ -395,22 +409,22 @@ exports.revokePermission = async (req, res) => {
     try {
 
         if (typeof web3 !== 'undefined') {
-            var web3 = new Web3(web3.currentProvider); 
+            var web3 = new Web3(web3.currentProvider);
         } else {
             var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
         }
-    
-        const {patientid, doctorid, fileId} = req.body
+
+        const { patientid, doctorid, fileId } = req.body
 
         const ipfsContract = new web3.eth.Contract(SIMP_STORAGE_IPFS_ABI, SIMP_STORAGE_IPFS_ADDRESS);
-    
-        await ipfsContract.methods.revokePermission(fileId,doctorid).send({from: patientid, gas:300000})
-    
-        res.json({success: true})
-        
+
+        await ipfsContract.methods.revokePermission(fileId, doctorid).send({ from: patientid, gas: 900000 })
+
+        res.json({ success: true })
+
     } catch (error) {
-        res.json({success: false})
-        
+        res.json({ success: false })
+
     }
-    
+
 }

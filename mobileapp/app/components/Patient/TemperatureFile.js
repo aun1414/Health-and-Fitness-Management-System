@@ -164,28 +164,13 @@ const TemperatureFile = ({ route }) => {
             
         
 
-                <TouchableOpacity
-                  onPress={() => setOpen(true)}>
                   <TextInput
                     value={date.toDateString()}
                     style={styles.textfield}
                     editable={false}
                   />
 
-                </TouchableOpacity>
-                <DatePicker
-                  modal
-                  mode='date'
-                  open={open}
-                  date={date}
-                  onConfirm={(date) => {
-                    setOpen(false)
-                    setDate(date)
-                  }}
-                  onCancel={() => {
-                    setOpen(false)
-                  }}
-                />
+                
 
                 <LineChart
                   data={{

@@ -166,8 +166,6 @@ const HeartRateFile = ({route}) => {
                     editable={false}
                   />
 
-                
-
                 <LineChart
                   data={{
                     labels: myData.map((item) =>

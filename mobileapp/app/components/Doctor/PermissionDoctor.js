@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator,ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
 import { Text, TextInput, Portal, Provider, Modal, Button, RadioButton } from 'react-native-paper';
 import BackAppBar from '../BackAppBar';
 import { useNavigation } from '@react-navigation/native';
@@ -23,16 +23,32 @@ const PermissionDoctor = () => {
   const closeMenu = () => setVisibleMenu(false);
 
 
-  React.useEffect(() => { 
+  React.useEffect(() => {
     setElements([])
-    getElements(); 
+    getElements();
   }, [type])
+
+  React.useEffect(() => {
+    counter = 0;
+
+    let temp = []
+    for (var i = 0; i < tempelements.length; i++) {
+      console.log(tempelements)
+      if (tempelements[i].patientName.includes(search)) {
+        temp.push(tempelements[i])
+      }
+    }
+
+    setElements(temp)
+
+
+  }, [search])
 
   //get All file hashes from smart contract tjat doctor have permission to
   async function getElements() {
 
     setLoading(true)
-  
+
     const doctorid = await AsyncStorage.getItem("addressid");
 
     fetch(`${HTTP_CLIENT_URL}/contracts/getPermissionedFilesByDoctor`, {
@@ -83,6 +99,7 @@ const PermissionDoctor = () => {
         }
         setLoading(false)
         setElements(tempArr);
+        setTempElements(tempArr)
 
 
       }
@@ -179,15 +196,24 @@ const PermissionDoctor = () => {
           <ScrollView
             style={{ marginTop: 10 }}>
 
-            <TouchableOpacity
-              onPress={openMenu}>
-              <TextInput
-                value={type}
-                style={styles.textfield}
-                editable={false}
-              />
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center'
+              }}>
 
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={openMenu}>
+                <TextInput
+                  value={type}
+                  style={styles.textfield}
+                  editable={false}
+                />
+
+              </TouchableOpacity>
+
+            </View>
 
             <View
               style={{
@@ -268,6 +294,27 @@ const PermissionDoctor = () => {
                   )}
               </Col>
 
+              <Col>
+                <Row
+                  style={styles.bordered2}>
+                  <Text
+                    style={{ fontWeight: 'bold' }}>
+                    Patient
+                  </Text>
+                </Row>
+                {
+                  elements.map(element => (
+
+                    <Row
+                      style={styles.bordered1}
+                      key={element.file}>
+                      <Text>{element.patientName}</Text>
+                    </Row>
+
+                  )
+                  )}
+              </Col>
+
             </Grid>
 
           </ScrollView>
@@ -287,7 +334,7 @@ const styles = StyleSheet.create({
   texfield: {
     marginHorizontal: '2%',
     backgroundColor: 'white',
-    width: '96%'
+    width: '90%'
 
   },
   rows: {
@@ -308,7 +355,7 @@ const styles = StyleSheet.create({
   },
   bordered1: {
     borderColor: 'lightgray',
-    minHeight: 90,
+    minHeight: 120,
     borderWidth: 1,
     justifyContent: 'center',
     backgroundColor: 'white',
@@ -345,7 +392,7 @@ const styles = StyleSheet.create({
     marginHorizontal: '2%',
     textAlign: 'center',
     backgroundColor: 'white',
-    width: '96%'
+    width: '90%'
   },
   cancelbutton: {
     margin: 10,

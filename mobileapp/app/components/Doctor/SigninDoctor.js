@@ -29,7 +29,7 @@ const SigninDoctor = () => {
             setResult("Password is required");
             setModalVisible(true);
         }
-        else if (password.length() < 6) {
+        else if (password.length < 6) {
           setResult("Password should be 6 characters long");
           setModalVisible(true);
         }

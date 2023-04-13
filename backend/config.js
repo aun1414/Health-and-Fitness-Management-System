@@ -1,5 +1,5 @@
 exports.SIMP_STORAGE_ROLES_ADDRESS =
-'0x26bD2D34444c28ecfcFA52db7eA2fDb7162c7b96'
+'0x3717096A9E2eDe6628d2deCd6b6136e533cc507f'
 exports.SIMP_STORAGE_ROLES_ABI = [
   {
     "inputs": [
@@ -228,7 +228,7 @@ exports.SIMP_STORAGE_ROLES_ABI = [
 ]
 
 exports.SIMP_STORAGE_PERMISSIONS_ADDRESS =
-'0x0d0c94055D4AC56B51Fb7aA1B5f37F0e1828a160'
+'0x81325D732Ae492E084e0AFC2d01E1f392b548652'
 exports.SIMP_STORAGE_PERMISSIONS_ABI = [
   {
     "inputs": [
@@ -491,6 +491,26 @@ exports.SIMP_STORAGE_PERMISSIONS_ABI = [
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "number",
+        "type": "uint256"
+      }
+    ],
+    "name": "getFilePatient",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "n",
         "type": "uint256"
       },
@@ -566,10 +586,8 @@ exports.SIMP_STORAGE_PERMISSIONS_ABI = [
 ]
 
 
-
-
 exports.SIMP_STORAGE_IPFS_ADDRESS =
-'0x982192eBaBA895158B8Aaa923d24206E2E613777'
+'0x734E7A50357B9D70A5fdD594FFe78776a553b5A3'
 exports.SIMP_STORAGE_IPFS_ABI = [
   {
     "inputs": [

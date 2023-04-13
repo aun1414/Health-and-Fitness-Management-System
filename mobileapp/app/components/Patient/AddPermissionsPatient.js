@@ -30,7 +30,7 @@ const AddPermissionsPatient = () => {
 
   React.useEffect(() => { getElements(); }, [type])
 
-  
+
   //get all file hashes of patient from smartcontracts
   async function getElements() {
     setSelected(false)
@@ -135,33 +135,33 @@ const AddPermissionsPatient = () => {
 
   const changeCheckValue = (i) => {
     let arr = checkarr
-    if(arr[i]===false){
-      arr[i]=true
+    if (arr[i] === false) {
+      arr[i] = true
     }
-    else{
-      arr[i]=false
+    else {
+      arr[i] = false
     }
     setCheckArr([...arr])
 
     let find = false
     for (var i = 0; i < arr.length; i++) {
-      if(arr[i]===true){
-        find=true
+      if (arr[i] === true) {
+        find = true
         break
       }
-      
+
     }
     setSelected(find)
 
     console.log("Index: ", checkarr)
   }
 
-  const grantAccess = () =>{
+  const grantAccess = () => {
 
     let accessArr = []
 
-    for(let i=0; i<checkarr.length; i++){
-      if(checkarr[i]===true){
+    for (let i = 0; i < checkarr.length; i++) {
+      if (checkarr[i] === true) {
         accessArr.push(elements[i])
       }
 
@@ -220,8 +220,12 @@ const AddPermissionsPatient = () => {
 
             <View
               style={{
-                flex: 1
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center'
               }}>
+
+
 
               <TouchableOpacity
                 onPress={openMenu}>
@@ -238,7 +242,7 @@ const AddPermissionsPatient = () => {
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
               {loading && <ActivityIndicator color={"#fff"} />}
             </View>
-            
+
             <Grid
               style={{
                 marginTop: 10,
@@ -252,7 +256,7 @@ const AddPermissionsPatient = () => {
                   <Text style={{ fontWeight: 'bold' }}>
                   </Text>
                 </Row>
-               
+
                 {
                   checkarr.map((checked, index) => (
                     <Row
@@ -271,8 +275,8 @@ const AddPermissionsPatient = () => {
                               justifyContent: 'center',
                               marginRight: 10,
                             }}>
-                            
-                             
+
+
                             {checkarr[index] && (
                               <View
                                 style={{
@@ -280,12 +284,12 @@ const AddPermissionsPatient = () => {
                                   width: 14,
                                   borderRadius: 7,
                                   backgroundColor: '#007AFF',
-                                }} 
+                                }}
                               >
-                                </View>
+                              </View>
                             )}
                           </View>
-                         
+
                         </View>
                       </TouchableOpacity>
 
@@ -316,9 +320,9 @@ const AddPermissionsPatient = () => {
                           minHeight: 30,
                           width: '90%'
                         }}
-                        >
-                        <Text style={{  padding: 10 }}
-                        onPress={() => visitFile(element?.file)}>
+                      >
+                        <Text style={{ padding: 10 }}
+                          onPress={() => visitFile(element?.file)}>
                           {element?.file}
                         </Text>
                       </View>
@@ -361,20 +365,20 @@ const AddPermissionsPatient = () => {
                   )}
               </Col>
 
-             
+
 
             </Grid>
           </ScrollView>
           {selected &&
-          <View style={{height: 40, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly',
-          alignItems: 'center'}}>
-            <TouchableOpacity style={{borderColor: 'blue', borderWidth: 2, padding : 8}} onPress={grantAccess}>
-              <Text style={{color: 'blue'}}>Grant Access</Text>
+            <View style={{
+              height: 40, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly',
+              alignItems: 'center'
+            }}>
+              <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }} onPress={grantAccess}>
+                <Text style={{ color: 'blue' }}>Grant Access</Text>
               </TouchableOpacity>
-            <TouchableOpacity style={{borderColor: 'blue', borderWidth: 2, padding : 8}}>
-              <Text style={{color: 'blue'}}>View Files</Text>
-            </TouchableOpacity>
-          </View>
+              
+            </View>
 
           }
         </ImageBackground>

@@ -122,6 +122,11 @@ contract Permissions {
         return filesHashesDoc;
     }
 
+    //get file owner
+    function getFilePatient(uint256 number) public view returns (address) {
+        return files[number].patientID;
+    }
+
     //Function to grant permission
     function grantPermission(
         uint n,

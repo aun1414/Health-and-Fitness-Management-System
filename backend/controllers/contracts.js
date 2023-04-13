@@ -349,9 +349,15 @@ exports.getAllPermissionedFilesByDoctor = async (req, resp) => {
 
                         await ipfsContract.methods.getFileType(response1).call({ from: doctorid, gas: 900000 }).then(async (res1) => {
                             if (res1.startsWith(fileType)) {
+
+                                await permissionContract.methods.getFilePatient(response1).call({ from: doctorid, gas: 900000 }).then(async (patint) =>{
+
+                                    const typeDate = res1.split("_")
+                                    files.push({ file: res[i], fileHash: response, type: typeDate[0], date: typeDate[1], patient: patint })
+
+                                })
                            
-                            const typeDate = res1.split("_")
-                            files.push({ file: res[i], fileHash: response, type: typeDate[0], date: typeDate[1] })
+                            
                             }
                         })
                     })

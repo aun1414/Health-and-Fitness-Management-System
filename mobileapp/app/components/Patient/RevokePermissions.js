@@ -338,6 +338,25 @@ const RevokePermissions = () => {
           resizeMode="cover"
           style={{ height: '100%' }}>
           <ScrollView style={{ marginTop: 10 }}>
+          <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'center'
+              }}>
+
+              <TouchableOpacity
+                onPress={openMenu}>
+                <TextInput
+                  value={type}
+                  style={styles.texfield}
+                  editable={false}
+                />
+
+              </TouchableOpacity>
+
+            </View>
+
             <View
               style={{
                 flex: 1,
@@ -345,25 +364,13 @@ const RevokePermissions = () => {
                 justifyContent: 'center'
               }}>
 
-
-            </View>
-
-            <TouchableOpacity
-              onPress={openMenu}>
               <TextInput
-                value={type}
-                style={styles.textfield}
-                editable={false}
-              />
-
-            </TouchableOpacity>
-
-            <TextInput
-              style={styles.texfield}
-              placeholder='Doctor...'
-              mode='outlined'
-              value={search}
-              onChangeText={changed} />
+                style={styles.texfield}
+                placeholder='Doctor...'
+                mode='outlined'
+                value={search}
+                onChangeText={changed} />
+            </View>
 
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
               {loading && <ActivityIndicator color={"#fff"} />}
@@ -494,9 +501,7 @@ const RevokePermissions = () => {
               <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }} onPress={revokeAccess}>
                 <Text style={{ color: 'blue' }}>Revoke Permissions</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }}>
-                <Text style={{ color: 'blue' }}>View Files</Text>
-              </TouchableOpacity>
+            
             </View>
 
           }
@@ -571,7 +576,7 @@ const styles = StyleSheet.create({
     marginHorizontal: '2%',
     textAlign: 'center',
     backgroundColor: 'white',
-    width: '96%'
+    width: '90%'
   },
   cancelbutton: {
     margin: 10,
@@ -579,7 +584,7 @@ const styles = StyleSheet.create({
   texfield: {
     marginHorizontal: '2%',
     backgroundColor: 'white',
-    width: '96%'
+    width: '90%'
   },
 
 

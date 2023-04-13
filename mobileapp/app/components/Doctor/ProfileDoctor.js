@@ -219,30 +219,35 @@ const ProfileDoctor = () => {
     setvisibleExperience(false);
   }
   const okExperience = async () => {
-    setExperience(modalExperience);
-    setvisibleExperience(false);
+    if (modalExperience >= 0) {
+      setExperience(modalExperience);
+      setvisibleExperience(false);
 
-    try {
-      const addressid = await AsyncStorage.getItem("addressid");
-      const response = fetch(`${HTTP_CLIENT_URL}/doctorProfile/updateExperience`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ addressid, experience: modalExperience }),
-      }).then(async res => {
-        //On Sucessufully returning from API collect response
-        console.log(res);
-        const d = await res.json();
-        //checking if the response has status ok
-        if (d.success) {
-          console.log(d);
-        }
+      try {
+        const addressid = await AsyncStorage.getItem("addressid");
+        const response = fetch(`${HTTP_CLIENT_URL}/doctorProfile/updateExperience`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ addressid, experience: modalExperience }),
+        }).then(async res => {
+          //On Sucessufully returning from API collect response
+          console.log(res);
+          const d = await res.json();
+          //checking if the response has status ok
+          if (d.success) {
+            console.log(d);
+          }
 
-      });
+        });
+      }
+      catch (error) {
+        console.log(error);
+      }
     }
-    catch (error) {
-      console.log(error);
+    else {
+      setModalExperience(0)
     }
 
   }

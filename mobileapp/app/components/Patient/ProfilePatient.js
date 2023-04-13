@@ -192,7 +192,7 @@ const ProfilePatient = () => {
     setvisibleWeight(false);
   }
   const okWeight = async () => {
-    if (modalWeight > 0) {
+    if (modalweight > 0) {
 
 
       setWeight(modalweight);

@@ -198,9 +198,7 @@ const PermissionDoctor = () => {
 
             <View
               style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center'
+                flex: 1
               }}>
 
               <TouchableOpacity
@@ -332,9 +330,15 @@ const styles = StyleSheet.create({
     height: '100%'
   },
   texfield: {
-    marginHorizontal: '2%',
+    marginHorizontal: '3%',
+ 
     backgroundColor: 'white',
-    width: '90%'
+    width: '94%',
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
+    height: 45
 
   },
   rows: {
@@ -355,7 +359,7 @@ const styles = StyleSheet.create({
   },
   bordered1: {
     borderColor: 'lightgray',
-    minHeight: 120,
+    minHeight: 150,
     borderWidth: 1,
     justifyContent: 'center',
     backgroundColor: 'white',
@@ -389,10 +393,15 @@ const styles = StyleSheet.create({
 
   },
   textfield: {
-    marginHorizontal: '2%',
+    marginHorizontal: '3%',
     textAlign: 'center',
     backgroundColor: 'white',
-    width: '90%'
+    width: '94%',
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
+    height: 48
   },
   cancelbutton: {
     margin: 10,

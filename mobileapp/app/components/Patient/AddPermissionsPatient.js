@@ -221,8 +221,6 @@ const AddPermissionsPatient = () => {
             <View
               style={{
                 flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center'
               }}>
 
 
@@ -321,7 +319,7 @@ const AddPermissionsPatient = () => {
                           width: '90%'
                         }}
                       >
-                        <Text style={{ padding: 10 }}
+                        <Text style={{  color: 'blue', padding: 10 }}
                           onPress={() => visitFile(element?.file)}>
                           {element?.file}
                         </Text>
@@ -337,7 +335,7 @@ const AddPermissionsPatient = () => {
                 <Row
                   style={styles.bordered2}>
                   <Text style={{ fontWeight: 'bold' }}>
-                    Date(mm/dd/yyyy)
+                    Date
                   </Text>
                 </Row>
 
@@ -450,10 +448,15 @@ const styles = StyleSheet.create({
 
   },
   textfield: {
-    marginHorizontal: '2%',
+    marginHorizontal: '3%',
     textAlign: 'center',
     backgroundColor: 'white',
-    width: '96%'
+    width: '94%',
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
+    height: 45
   },
   cancelbutton: {
     margin: 10,

@@ -340,16 +340,14 @@ const RevokePermissions = () => {
           <ScrollView style={{ marginTop: 10 }}>
           <View
               style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center'
+                flex: 1
               }}>
 
               <TouchableOpacity
                 onPress={openMenu}>
                 <TextInput
                   value={type}
-                  style={styles.texfield}
+                  style={styles.textfield}
                   editable={false}
                 />
 
@@ -453,7 +451,7 @@ const RevokePermissions = () => {
                         mode="contained"
                         onPress={() => visitFile(element.file)}
                       >
-                        <Text style={{ padding: 10 }}>{element.file}</Text>
+                        <Text style={{  color: 'blue', padding: 10 }}>{element.file}</Text>
                       </TouchableOpacity>
                     </Row>
 
@@ -573,18 +571,29 @@ const styles = StyleSheet.create({
 
   },
   textfield: {
-    marginHorizontal: '2%',
+    marginHorizontal: '3%',
     textAlign: 'center',
     backgroundColor: 'white',
-    width: '90%'
+    width: '94%',
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
+    height: 45
   },
   cancelbutton: {
     margin: 10,
   },
   texfield: {
-    marginHorizontal: '2%',
+    marginHorizontal: '3%',
+
     backgroundColor: 'white',
-    width: '90%'
+    width: '94%',
+    borderBottomStartRadius: 30,
+    borderBottomEndRadius: 30,
+    borderTopEndRadius: 30,
+    borderTopStartRadius: 30,
+    height: 45
   },
 
 

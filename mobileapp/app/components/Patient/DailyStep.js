@@ -288,9 +288,9 @@ const DailyStep = () => {
                                         data: [myData.value / target]
                                     }}
                                     width={Dimensions.get("window").width - 20}
-                                    height={250}
+                                    height={200}
                                     strokeWidth={20}
-                                    radius={80}
+                                    radius={70}
                                     chartConfig={{
                                         backgroundGradientFrom: "#FFFFFF",
                                         backgroundGradientTo: "#FFFFFF",

@@ -16,6 +16,9 @@ import TemperatureFile from './TemperatureFile';
 import DataHeartRate from './DataHeartRate'
 import DataBloodPressure from './DataBloodPressure';
 import DataTemperature from './DataTemperature';
+import InputKeySlider from '../InputKeySlider';
+import SliderPatient from './Slider/SliderPatient';
+import PatientPermission from './PatientPermission';
 
 const Stack = createNativeStackNavigator();
 const AddPermissionPatient = () => {
@@ -71,6 +74,9 @@ const AddPermissionPatient = () => {
         <Stack.Screen name='DataHeartRate' component={DataHeartRate} />
         <Stack.Screen name='DataBloodPressure' component={DataBloodPressure} />
         <Stack.Screen name='DataTemperature' component={DataTemperature} />
+        <Stack.Screen name='InputKeySlider' component={InputKeySlider} />
+        <Stack.Screen name='SliderPatient' component={SliderPatient} />
+      
       </Stack.Navigator>
     </NavigationContainer>
   );

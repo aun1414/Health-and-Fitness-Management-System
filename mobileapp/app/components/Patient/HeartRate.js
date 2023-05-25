@@ -285,9 +285,9 @@ const HeartRate = () => {
             {
               fitAuthorized == "Authorized" &&
               <View>
-                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                  {loading && <ActivityIndicator color={"#fff"} />}
-                </View>
+                 
+               
+                 {loading && <ActivityIndicator color={"#fff"} style={{marginBottom: 5}} />}
                 <TouchableOpacity
                   onPress={() => setOpen(true)}>
                   <TextInput

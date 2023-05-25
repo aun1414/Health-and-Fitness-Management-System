@@ -97,6 +97,7 @@ const MainPatient = () => {
                 resizeMode: 'contain'
               }} />
           ),
+          headerShown: false,
         }} />
 
       <Tab.Screen

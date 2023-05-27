@@ -1,6 +1,6 @@
 import React from 'react';
-import { ActivityIndicator, ScrollView, Image, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
-import { Text, TextInput, Button, Provider, Portal, Modal, RadioButton } from 'react-native-paper';
+import { TextInput, ActivityIndicator, ScrollView, Image, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
+import { Text, Button, Provider, Portal, Modal, RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,6 +15,7 @@ const AddPermissionsPatient = () => {
   const navigation = useNavigation();
   const [elements, setElements] = React.useState([]);
   const [tempelements, setTempElements] = React.useState([]);
+  const [search, setSearch] = React.useState("")
 
 
   const [visibleMenu, setVisibleMenu] = React.useState(false);
@@ -29,6 +30,32 @@ const AddPermissionsPatient = () => {
   const closeMenu = () => setVisibleMenu(false);
 
   React.useEffect(() => { getElements(); }, [type])
+
+  const changed = (text) => {
+    setSearch(text);
+    console.log(text);
+
+  }
+
+  React.useEffect(() => {
+    counter = 0;
+
+    let temp = []
+
+
+    for (var i = 0; i < tempelements.length; i++) {
+      console.log(tempelements)
+      
+      if (tempelements[i].fileDate.includes(search)) {
+        temp.push(tempelements[i])
+      }
+    }
+
+    setElements(temp)
+    let tempcheckArr = new Array(temp.length).fill(false);
+    setCheckArr(tempcheckArr)
+
+  }, [search])
 
 
   //get all file hashes of patient from smartcontracts
@@ -166,7 +193,7 @@ const AddPermissionsPatient = () => {
       }
 
     }
-    navigation.navigate('GrantPermissionPatient', { path: 'TemperatureFile', hash: element[i] })
+    navigation.navigate('GrantPermissionPatient', {  paramKey: accessArr })
   }
 
   const VisitFiles = () => {
@@ -174,7 +201,7 @@ const AddPermissionsPatient = () => {
 
     for (let i = 0; i < checkarr.length; i++) {
       if (checkarr[i] === true) {
-        accessArr.push(elements[i].file)
+        accessArr.push(elements[i])
       }
 
     }
@@ -247,53 +274,119 @@ const AddPermissionsPatient = () => {
                 style={{
                   flex: 1,
                   flexDirection: 'row',
-                  justifyContent: 'center',
+                  justifyContent: 'space-between',
                   alignItems: 'center',
                   backgroundColor: '#fff',
                   width: '94%',
                   borderBottomStartRadius: 30,
                   borderBottomEndRadius: 30,
                   borderTopEndRadius: 30,
-                  borderTopStartRadius: 30
+                  borderTopStartRadius: 30,
+                  height: 44
                 }}>
 
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    paddingLeft: 30
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={openMenu}>
+                    {/* <Text style={styles.textfield}>{type}</Text> */}
+                    <Text
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        color: 'black',
+                        paddingLeft: 10
+                      }}
+
+                    >{type}</Text>
 
 
-                <TouchableOpacity
-                  onPress={openMenu}>
-                  <TextInput
-                    value={type}
-                    style={styles.textfield}
-                    editable={false}
-                  />
+                  </TouchableOpacity>
+                </View>
+
+                <View
+                  style={{
+                    alignSelf: 'flex-end',
+                    paddingRight: 30,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingBottom: 13
+                  }}
+                >
 
 
-                </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={openMenu}>
-                  <Image
-                    source={require('../../images/drop-down.png')}
-                    style={{ width: 20, height: 20 }}
-                  />
-                </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={openMenu}>
+                    <Image
+                      source={require('../../images/drop-down.png')}
+                      style={{ width: 20, height: 20 }}
+                    />
+                  </TouchableOpacity>
+
+                </View>
+
 
 
 
               </View>
             </View>
 
-           
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                borderColor: 'lightgray',
+                height: 50,
+                borderWidth: 1,
+                backgroundColor: 'lightblue',
+                marginHorizontal: 10,
+                marginTop: 10
+              }}>
+
+              <TextInput
+                style={{
+                  width: 240,
+                  height: 35,
+                  marginRight: 5,
+                  marginTop: 5,
+                  marginBottom: 5,
+                  borderRadius: 20,
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  paddingHorizontal: 20,
+                  paddingVertical: 0,
+                  fontSize: 14,
+                  backgroundColor: '#fff',
+                  
+                }}
+                placeholder='Search...'
+                mode='outlined'
+                value={search}
+                onChangeText={changed} />
+            </View>
+
+
 
             <Grid
               style={{
-                marginTop: 10,
+                marginTop: 0,
                 marginHorizontal: 10
               }}>
 
               {selected &&
 
-                <Col size={15}>
+                <Col size={12}>
 
                   <Row
                     style={styles.bordered2}>
@@ -410,7 +503,7 @@ const AddPermissionsPatient = () => {
                   )}
               </Col>
 
-              <Col size={34}>
+              {!selected && <Col size={34}>
 
                 <Row
                   style={styles.bordered2}>
@@ -438,6 +531,7 @@ const AddPermissionsPatient = () => {
                           <Text style={{ color: 'blue' }}>Grant Access</Text>
                         </TouchableOpacity>
 
+                        <Text>or</Text>
                         <TouchableOpacity style={{
                           padding: 8
                         }}
@@ -452,6 +546,7 @@ const AddPermissionsPatient = () => {
                   )
                   )}
               </Col>
+}
 
 
 

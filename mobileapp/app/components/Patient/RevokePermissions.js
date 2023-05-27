@@ -1,6 +1,6 @@
 import React from 'react';
-import { ActivityIndicator, ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
-import { Text, TextInput, Provider, Portal, Modal, RadioButton, Button } from 'react-native-paper';
+import { ActivityIndicator, TextInput, ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity, Image } from 'react-native';
+import { Text, Provider, Portal, Modal, RadioButton, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -37,11 +37,14 @@ const RevokePermissions = () => {
       if (tempelements[i].doctorName.includes(search)) {
         temp.push(tempelements[i])
       }
+      else if (tempelements[i].fileDate.includes(search)) {
+        temp.push(tempelements[i])
+      }
     }
 
     setElements(temp)
     let tempcheckArr = new Array(temp.length).fill(false);
-        setCheckArr(tempcheckArr)
+    setCheckArr(tempcheckArr)
 
   }, [search])
 
@@ -167,6 +170,39 @@ const RevokePermissions = () => {
   //   });
   // }
 
+  const revokeAccessFile = async (element) => {
+
+    const patientid = await AsyncStorage.getItem("addressid");
+    const doctor = element.doctor
+    const fileId = element.file
+
+    setLoading(true)
+    fetch(`${HTTP_CLIENT_URL}/contracts/revokePermission`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ patientid: patientid, doctorid: doctor, fileId: fileId }),
+    }).then(async res => {
+      //On Sucessufully returning from API collect response
+      const d = await res.json();
+      console.log(d);
+
+      //checking if the response has status ok
+      if (d.success) {
+
+          getElements();
+      }
+      else {
+        setLoading(false)
+        console.log(element)
+        console.log("Error updating permission to blockchain")
+
+      }
+    });
+
+  }
+
   const revokeAccess = async () => {
     let accessArr = []
 
@@ -291,6 +327,19 @@ const RevokePermissions = () => {
     console.log("Index: ", checkarr)
   }
 
+  const VisitFiles = () => {
+    let accessArr = []
+
+    for (let i = 0; i < checkarr.length; i++) {
+      if (checkarr[i] === true) {
+        accessArr.push(elements[i])
+      }
+
+    }
+    console.log("All Files: ", accessArr)
+    navigation.navigate('InputKeySlider', { path: 'SliderPatient', files: accessArr })
+  }
+
 
   return (
     <Provider>
@@ -338,95 +387,180 @@ const RevokePermissions = () => {
           resizeMode="cover"
           style={{ height: '100%' }}>
           <ScrollView style={{ marginTop: 10 }}>
-          <View
-              style={{
-                flex: 1
-              }}>
+            <View style={{
+              flex: 1,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
 
-              <TouchableOpacity
-                onPress={openMenu}>
-                <TextInput
-                  value={type}
-                  style={styles.textfield}
-                  editable={false}
-                />
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  backgroundColor: '#fff',
+                  width: '94%',
+                  borderBottomStartRadius: 30,
+                  borderBottomEndRadius: 30,
+                  borderTopEndRadius: 30,
+                  borderTopStartRadius: 30,
+                  height: 44
+                }}>
 
-              </TouchableOpacity>
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    paddingLeft: 30
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={openMenu}>
+                    {/* <Text style={styles.textfield}>{type}</Text> */}
+                    <Text
+                      style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        fontSize: 16,
+                        color: 'black',
+                        paddingLeft: 10
+                      }}
 
+                    >{type}</Text>
+
+
+                  </TouchableOpacity>
+                </View>
+
+                <View
+                  style={{
+                    alignSelf: 'flex-end',
+                    paddingRight: 30,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingBottom: 13
+                  }}
+                >
+
+
+
+                  <TouchableOpacity
+                    onPress={openMenu}>
+                    <Image
+                      source={require('../../images/drop-down.png')}
+                      style={{ width: 20, height: 20 }}
+                    />
+                  </TouchableOpacity>
+
+                </View>
+
+
+
+
+              </View>
+            </View>
+
+            
+
+            <View style={{ flex: 1, marginTop: 5, justifyContent: "center", alignItems: "center" }}>
+              {loading && <ActivityIndicator color={"#fff"} />}
             </View>
 
             <View
               style={{
                 flex: 1,
                 flexDirection: 'row',
-                justifyContent: 'center'
+                justifyContent: 'flex-end',
+                borderColor: 'lightgray',
+                height: 50,
+                borderWidth: 1,
+                backgroundColor: 'lightblue',
+                marginHorizontal: 10,
+                marginTop: 10
               }}>
 
               <TextInput
-                style={styles.texfield}
-                placeholder='Doctor...'
+                style={{
+                  width: 240,
+                  height: 35,
+                  marginRight: 5,
+                  marginTop: 5,
+                  marginBottom: 5,
+                  borderRadius: 20,
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                  paddingHorizontal: 20,
+                  paddingVertical: 0,
+                  fontSize: 14,
+                  backgroundColor: '#fff',
+                  
+                }}
+                placeholder='Search...'
                 mode='outlined'
                 value={search}
                 onChangeText={changed} />
             </View>
 
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-              {loading && <ActivityIndicator color={"#fff"} />}
-            </View>
-
             <Grid
               style={{
-                marginTop: 10,
+                marginTop: 0,
                 marginHorizontal: 10
               }}>
-              <Col size={15}>
+                
+              { selected &&
+                <Col size={15}>
 
-                <Row
-                  style={styles.bordered2}>
-                  <Text style={{ fontWeight: 'bold' }}>
-                  </Text>
-                </Row>
+                  <Row
+                    style={styles.bordered2}>
+                    <Text style={{ fontWeight: 'bold' }}>
+                    </Text>
+                  </Row>
 
-                {
-                  checkarr.map((checked, index) => (
-                    <Row
-                      style={styles.bordered1}
-                      key={index}>
-                      <TouchableOpacity onPress={() => changeCheckValue(index)}>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                          <View
-                            style={{
-                              height: 20,
-                              width: 20,
-                              borderRadius: 10,
-                              borderWidth: 2,
-                              borderColor: checkarr[index] ? '#007AFF' : '#C7C7CC',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              marginRight: 10,
-                            }}>
+                  {
+                    checkarr.map((checked, index) => (
+                      <Row
+                        style={styles.bordered1}
+                        key={index}>
+                        <TouchableOpacity onPress={() => changeCheckValue(index)}>
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <View
+                              style={{
+                                height: 20,
+                                width: 20,
+                                borderRadius: 10,
+                                borderWidth: 2,
+                                borderColor: checkarr[index] ? '#007AFF' : '#C7C7CC',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                marginRight: 10,
+                              }}>
 
 
-                            {checkarr[index] && (
-                              <View
-                                style={{
-                                  height: 14,
-                                  width: 14,
-                                  borderRadius: 7,
-                                  backgroundColor: '#007AFF',
-                                }}
-                              >
-                              </View>
-                            )}
+                              {checkarr[index] && (
+                                <View
+                                  style={{
+                                    height: 14,
+                                    width: 14,
+                                    borderRadius: 7,
+                                    backgroundColor: '#007AFF',
+                                  }}
+                                >
+                                </View>
+                              )}
+                            </View>
+
                           </View>
+                        </TouchableOpacity>
 
-                        </View>
-                      </TouchableOpacity>
-
-                    </Row>
-                  )
-                  )}
-              </Col>
+                      </Row>
+                    )
+                    )}
+                </Col>
+              }
               <Col size={40}>
                 <Row
                   style={styles.bordered2}>
@@ -436,23 +570,26 @@ const RevokePermissions = () => {
                 </Row>
 
                 {
-                  elements.map(element => (
+                  elements.map((element, index) => (
 
                     <Row
                       style={styles.bordered1}
                       key={element.file + element.doctor}>
-                      <TouchableOpacity
+                      <View
                         style={{
                           alignItems: 'center',
                           justifyContent: 'center',
                           minHeight: 30,
                           width: '90%'
                         }}
-                        mode="contained"
-                        onPress={() => visitFile(element.file)}
+                        
+                        
                       >
-                        <Text style={{  color: 'blue', padding: 10 }}>{element.file}</Text>
-                      </TouchableOpacity>
+                        <Text style={{ padding: 10 }}
+                          onLongPress={() => changeCheckValue(index)}>
+                          {element.file}
+                        </Text>
+                      </View>
                     </Row>
 
                   )
@@ -489,7 +626,54 @@ const RevokePermissions = () => {
                   )}
               </Col>
 
+              {!selected &&
+               <Col size={34}>
+
+                <Row
+                  style={styles.bordered2}>
+                  <Text style={{ fontWeight: 'bold' }}>
+                    Actions
+                  </Text>
+                </Row>
+
+                {
+                  elements.map(element => (
+
+                    <Row
+                      style={styles.bordered1}
+                      key={element.file}>
+                      <View style={{
+                        flex: 1,
+                        flexDirection: 'column',
+                        justifyContent: 'space-evenly',
+                        alignItems: 'center'
+                      }}>
+                        <TouchableOpacity style={{
+                          padding: 8
+                        }}
+                          onPress={() => revokeAccessFile(element)}>
+                          <Text style={{ color: 'blue' }}>Revoke Access</Text>
+                        </TouchableOpacity>
+
+                        <Text>or</Text>
+                        <TouchableOpacity style={{
+                          padding: 8
+                        }}
+                          onPress={() => visitFile(element?.file)}>
+                          <Text style={{ color: 'blue' }}>View Files</Text>
+                        </TouchableOpacity>
+
+                      </View>
+
+                    </Row>
+
+                  )
+                  )}
+              </Col>
+            }
+
             </Grid>
+            
           </ScrollView>
           {selected &&
             <View style={{
@@ -499,7 +683,11 @@ const RevokePermissions = () => {
               <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }} onPress={revokeAccess}>
                 <Text style={{ color: 'blue' }}>Revoke Permissions</Text>
               </TouchableOpacity>
-            
+
+              <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }} onPress={VisitFiles}>
+                <Text style={{ color: 'blue' }}>View Files</Text>
+              </TouchableOpacity>
+
             </View>
 
           }
@@ -538,7 +726,7 @@ const styles = StyleSheet.create({
   },
   bordered1: {
     borderColor: 'lightgray',
-    minHeight: 150,
+    minHeight: 190,
     borderWidth: 1,
     justifyContent: 'center',
     backgroundColor: 'white',

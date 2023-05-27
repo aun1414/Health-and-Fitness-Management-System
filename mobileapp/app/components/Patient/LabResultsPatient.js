@@ -164,7 +164,7 @@ const LabResultsPatient = () => {
                       size={4}>
                       <TouchableOpacity
                         mode="contained"
-                        onPress={()=>press(element)}>
+                        onPress={()=>press(element.file)}>
                         <Text
                           style={{
                             padding: 10,

@@ -336,7 +336,15 @@ const FileSlide = (item) => {
 
             <Image
               source={require('../../../images/medication.jpg')}
-              style={styles.image}
+              style={{
+                marginLeft: 'auto',
+                marginRight: 'auto',
+                marginTop: 10,
+                marginBottom: 10,
+                borderRadius: 20,
+                width: 120,
+                height: 120
+              }}
             />
 
             <Grid style={{ borderRadius: 20 }}>
@@ -505,7 +513,7 @@ const FileSlide = (item) => {
         </View>
       }
       {
-        type == "HeartRate" && 
+        type == "HeartRate" &&
         <View style={{ marginTop: 20 }}>
           <View>
             <TextInput
@@ -515,60 +523,60 @@ const FileSlide = (item) => {
             />
 
             <LineChart
-                  data={{
-                    labels: myData.map((item) =>
-                      new Date(item.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
-                    ),
-                    datasets: [
-                      {
-                        data: myData.map((item) => item.value)
-                      },
-                      {
-                        data: [Math.min(...heartRates)-5],
-                        withDots: false
-                      },
-                      {
-                        data: [Math.max(...heartRates)+5],
-                        withDots: false
-                      }
-                    ]
-                  }}
-                  width={Dimensions.get("window").width - 20} // from react-native
-                  height={220}
-                  yAxisSuffix="bpm"
-                  yAxisInterval={1} // optional, defaults to 1
+              data={{
+                labels: myData.map((item) =>
+                  new Date(item.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
+                ),
+                datasets: [
+                  {
+                    data: myData.map((item) => item.value)
+                  },
+                  {
+                    data: [Math.min(...heartRates) - 5],
+                    withDots: false
+                  },
+                  {
+                    data: [Math.max(...heartRates) + 5],
+                    withDots: false
+                  }
+                ]
+              }}
+              width={Dimensions.get("window").width - 20} // from react-native
+              height={220}
+              yAxisSuffix="bpm"
+              yAxisInterval={1} // optional, defaults to 1
 
-                  withShadow={false}
-                  withInnerLines={false}
-                  withOuterLines={false}
-                  chartConfig={{
-                    backgroundGradientFrom: '#FFFFFF',
-                    backgroundGradientTo: '#FFFFFF',
-                    decimalPlaces: 0,
-                    color: (opacity = 1) => `rgba(255, 69, 0, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                    style: {
-                      borderRadius: 16,
-                    },
-                    propsForDots: {
-                      r: '3',
-                      strokeWidth: '2',
-                      stroke: '#FF4500',
-                    },
+              withShadow={false}
+              withInnerLines={false}
+              withOuterLines={false}
+              chartConfig={{
+                backgroundGradientFrom: '#FFFFFF',
+                backgroundGradientTo: '#FFFFFF',
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(255, 69, 0, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                },
+                propsForDots: {
+                  r: '3',
+                  strokeWidth: '2',
+                  stroke: '#FF4500',
+                },
 
-                  }}
-                  bezier
-                  style={{
-                    marginVertical: 10,
-                    marginHorizontal: 12,
-                  }}
+              }}
+              bezier
+              style={{
+                marginVertical: 10,
+                marginHorizontal: 12,
+              }}
 
-                />
+            />
 
 
             <View style={styles.rowline}>
               <TouchableOpacity
-                onPress={() => navigation.navigate('DataBloodPressure', { date: date.toLocaleDateString(), element: myData })}>
+                onPress={() => navigation.navigate('DataHeartRate', { date: date.toLocaleDateString(), element: myData })}>
                 <Text
                   style={styles.linktext}>
                   See All Data

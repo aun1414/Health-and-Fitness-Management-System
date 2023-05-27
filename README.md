@@ -139,65 +139,15 @@ MongoDB
 
 ## Installations
 ---
-Install following libraries for mobile app
+Install the required libraries in package.json for mobile app using following command
 
 ```
 npm install 
-
-npm install react-native-paper@5.0.0-rc.8
-
-npm install @react-navigation/native
-
-npm install @react-navigation/native-stack
-
-npm install @react-navigation/bottom-tabs
-
-npm install react-native-paper-grid
-
-npm install react-native-easy-grid
-
-npm install react-native-modal-datetime-picker 
-
-npm install react-native-document-picker  
-
-npm install @react-navigation/material-top-tabs react-native-tab-view
-
-npm install react-native-screens react-native-safe-area-context
-
-npm i react-native-pager-view
-
-npm i @react-native-async-storage/async-storage --force
- 
-npm i react-native-google-fit
-
-npm i react-native-background-timer
-
 ```
-Install following libraries for backend
+
+Install the required libraries in package.json for backend using following command
 ```
 npm install
-
-npm install express --save
-
-npm install -g nodemon
-
-npm install -g mongoose
-
-npm install crypto
-
-npm install body-parser
-
-npm install express-fileupload
-
-npm install cors
-
-npm install bcrypt
-
-npm install ipfs-only-hash
-
-npm install ipfs-http-client
-
-npm install recrypt-js
 ```
 
 ## Quick Start

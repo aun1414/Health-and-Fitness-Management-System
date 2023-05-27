@@ -45,7 +45,7 @@ const AddPermissionsPatient = () => {
 
     for (var i = 0; i < tempelements.length; i++) {
       console.log(tempelements)
-      
+
       if (tempelements[i].fileDate.includes(search)) {
         temp.push(tempelements[i])
       }
@@ -193,7 +193,7 @@ const AddPermissionsPatient = () => {
       }
 
     }
-    navigation.navigate('GrantPermissionPatient', {  paramKey: accessArr })
+    navigation.navigate('GrantPermissionPatient', { paramKey: accessArr })
   }
 
   const VisitFiles = () => {
@@ -351,7 +351,7 @@ const AddPermissionsPatient = () => {
                 borderWidth: 1,
                 backgroundColor: 'lightblue',
                 marginHorizontal: 10,
-                marginTop: 10
+                marginTop: 20
               }}>
 
               <TextInput
@@ -368,7 +368,7 @@ const AddPermissionsPatient = () => {
                   paddingVertical: 0,
                   fontSize: 14,
                   backgroundColor: '#fff',
-                  
+
                 }}
                 placeholder='Search...'
                 mode='outlined'
@@ -546,12 +546,12 @@ const AddPermissionsPatient = () => {
                   )
                   )}
               </Col>
-}
+              }
 
 
 
             </Grid>
-            <View style={{ flex: 1, marginTop: 5, justifyContent: "center", alignItems: "center" }}>
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 10 }}>
               {loading && <ActivityIndicator color={"#fff"} />}
             </View>
           </ScrollView>

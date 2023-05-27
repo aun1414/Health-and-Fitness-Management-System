@@ -191,7 +191,7 @@ const RevokePermissions = () => {
       //checking if the response has status ok
       if (d.success) {
 
-          getElements();
+        getElements();
       }
       else {
         setLoading(false)
@@ -464,9 +464,9 @@ const RevokePermissions = () => {
               </View>
             </View>
 
-            
 
-            <View style={{ flex: 1, marginTop: 5, justifyContent: "center", alignItems: "center" }}>
+
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 10 }}>
               {loading && <ActivityIndicator color={"#fff"} />}
             </View>
 
@@ -480,7 +480,7 @@ const RevokePermissions = () => {
                 borderWidth: 1,
                 backgroundColor: 'lightblue',
                 marginHorizontal: 10,
-                marginTop: 10
+                marginTop: 20
               }}>
 
               <TextInput
@@ -497,7 +497,7 @@ const RevokePermissions = () => {
                   paddingVertical: 0,
                   fontSize: 14,
                   backgroundColor: '#fff',
-                  
+
                 }}
                 placeholder='Search...'
                 mode='outlined'
@@ -510,8 +510,8 @@ const RevokePermissions = () => {
                 marginTop: 0,
                 marginHorizontal: 10
               }}>
-                
-              { selected &&
+
+              {selected &&
                 <Col size={15}>
 
                   <Row
@@ -582,8 +582,8 @@ const RevokePermissions = () => {
                           minHeight: 30,
                           width: '90%'
                         }}
-                        
-                        
+
+
                       >
                         <Text style={{ padding: 10 }}
                           onLongPress={() => changeCheckValue(index)}>
@@ -627,53 +627,53 @@ const RevokePermissions = () => {
               </Col>
 
               {!selected &&
-               <Col size={34}>
+                <Col size={34}>
 
-                <Row
-                  style={styles.bordered2}>
-                  <Text style={{ fontWeight: 'bold' }}>
-                    Actions
-                  </Text>
-                </Row>
+                  <Row
+                    style={styles.bordered2}>
+                    <Text style={{ fontWeight: 'bold' }}>
+                      Actions
+                    </Text>
+                  </Row>
 
-                {
-                  elements.map(element => (
+                  {
+                    elements.map(element => (
 
-                    <Row
-                      style={styles.bordered1}
-                      key={element.file}>
-                      <View style={{
-                        flex: 1,
-                        flexDirection: 'column',
-                        justifyContent: 'space-evenly',
-                        alignItems: 'center'
-                      }}>
-                        <TouchableOpacity style={{
-                          padding: 8
-                        }}
-                          onPress={() => revokeAccessFile(element)}>
-                          <Text style={{ color: 'blue' }}>Revoke Access</Text>
-                        </TouchableOpacity>
+                      <Row
+                        style={styles.bordered1}
+                        key={element.file}>
+                        <View style={{
+                          flex: 1,
+                          flexDirection: 'column',
+                          justifyContent: 'space-evenly',
+                          alignItems: 'center'
+                        }}>
+                          <TouchableOpacity style={{
+                            padding: 8
+                          }}
+                            onPress={() => revokeAccessFile(element)}>
+                            <Text style={{ color: 'blue' }}>Revoke Access</Text>
+                          </TouchableOpacity>
 
-                        <Text>or</Text>
-                        <TouchableOpacity style={{
-                          padding: 8
-                        }}
-                          onPress={() => visitFile(element?.file)}>
-                          <Text style={{ color: 'blue' }}>View Files</Text>
-                        </TouchableOpacity>
+                          <Text>or</Text>
+                          <TouchableOpacity style={{
+                            padding: 8
+                          }}
+                            onPress={() => visitFile(element?.file)}>
+                            <Text style={{ color: 'blue' }}>View Files</Text>
+                          </TouchableOpacity>
 
-                      </View>
+                        </View>
 
-                    </Row>
+                      </Row>
 
-                  )
-                  )}
-              </Col>
-            }
+                    )
+                    )}
+                </Col>
+              }
 
             </Grid>
-            
+
           </ScrollView>
           {selected &&
             <View style={{

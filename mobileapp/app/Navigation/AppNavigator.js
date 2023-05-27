@@ -39,6 +39,7 @@ import HeartRateFileDoc from '../components/Doctor/HeartRateFileDoc';
 import TemperatureFileDoc from '../components/Doctor/TemperatureFileDoc';
 import Ranks from '../components/Patient/Ranks';
 import InputKeySlider from '../components/InputKeySlider';
+import SliderDoctor from '../components/Doctor/Slider/SliderDoctor';
 
 
 const Stack = createNativeStackNavigator();
@@ -89,6 +90,7 @@ const AppNavigator = () => {
     <Stack.Screen name='TemperatureFileDoc' component={TemperatureFileDoc} />
     <Stack.Screen name='Ranks' component={Ranks} />
     <Stack.Screen name='InputKeySlider' component={InputKeySlider} />
+    <Stack.Screen name='SliderDoctor' component={SliderDoctor} />
    </Stack.Navigator>
 
   );

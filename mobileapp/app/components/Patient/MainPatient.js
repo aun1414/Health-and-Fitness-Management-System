@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import More from '../More';
 import HomePatient from './HomePatient';
 import PatientPermission from './PatientPermission';
@@ -6,17 +6,19 @@ import { useNavigation } from '@react-navigation/native';
 import ProfilePatient from './ProfilePatient';
 import { Alert, BackHandler, Image } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
+import AppContext from './AppContext';
 
 const Tab = createBottomTabNavigator();
 const MainPatient = () => {
 
-
   const navigation = useNavigation();
+  const { hideTabs, toggleTabBarVisibility } = useContext(AppContext);
+
+
 
 
   React.useEffect(() => {
-  //what to do on pressing back button
+    //what to do on pressing back button
     const backAction = () => {
       if (navigation.isFocused()) {
         Alert.alert(
@@ -60,6 +62,7 @@ const MainPatient = () => {
 
         },
         tabBarStyle: {
+          display: hideTabs ? 'none' : 'flex',
           //  backgroundColor: '#b0e0e6',
           backgroundColor: 'royalblue',
           height: 65,

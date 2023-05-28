@@ -47,7 +47,7 @@ const MainPatient = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveBackgroundColor: 'royalblue',
+        tabBarActiveBackgroundColor: 'slateblue',
         tabBarActiveTintColor: 'white',
         tabBarInactiveTintColor: 'white',
         headerTintColor: 'white',
@@ -58,7 +58,7 @@ const MainPatient = () => {
         },
         tabBarStyle: {
           //  backgroundColor: '#b0e0e6',
-          backgroundColor: 'cornflowerblue',
+          backgroundColor: 'royalblue',
           height: 65,
 
         }

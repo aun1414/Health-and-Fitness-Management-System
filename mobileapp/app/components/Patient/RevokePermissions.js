@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ActivityIndicator, TextInput, ScrollView, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity, Image } from 'react-native';
 import { Text, Provider, Portal, Modal, RadioButton, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HTTP_CLIENT_URL } from '../../url';
-import { useIsFocused, useFocusEffect } from '@react-navigation/native';
+import AppContext from './AppContext';
 
 const RevokePermissions = () => {
 
@@ -19,6 +19,7 @@ const RevokePermissions = () => {
   const [selected, setSelected] = React.useState(false)
   const [search, setSearch] = React.useState("")
   const [tempelements, setTempElements] = React.useState([]);
+  const { hideTabs, toggleTabBarVisibility } = useContext(AppContext);
 
   const [loading, setLoading] = React.useState(false)
 
@@ -69,8 +70,11 @@ const RevokePermissions = () => {
   //get all files of patients for which he/she has given permission
   async function getElements() {
     setSelected(false)
-
+    setElements([])
+    setCheckArr([])
     setLoading(true)
+
+    toggleTabBarVisibility(false);
 
     const patientid = await AsyncStorage.getItem("addressid");
 
@@ -325,6 +329,14 @@ const RevokePermissions = () => {
     setSelected(find)
 
     console.log("Index: ", checkarr)
+
+    
+    if(find){
+      toggleTabBarVisibility(true);
+    }
+    else{
+      toggleTabBarVisibility(false);
+    }
   }
 
   const VisitFiles = () => {
@@ -677,15 +689,33 @@ const RevokePermissions = () => {
           </ScrollView>
           {selected &&
             <View style={{
-              height: 40, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly',
+              height: 65, backgroundColor: 'royalblue', flexDirection: 'row', justifyContent: 'space-evenly',
               alignItems: 'center'
             }}>
-              <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }} onPress={revokeAccess}>
-                <Text style={{ color: 'blue' }}>Revoke Permissions</Text>
+              <TouchableOpacity style={{ padding: 8 }} onPress={revokeAccess}>
+              <View style={{
+                  backgroundColor: 'royalblue', flexDirection: 'column', justifyContent: 'space-evenly',
+                  alignItems: 'center'
+                }}>
+                  <Image
+                    source={require('../../images/revoke.png')}
+                    style={{ width: 25, height: 25 }}
+                  />
+                  <Text style={{ color: 'white', marginTop: 5 }}>Revoke Permissions</Text>
+                </View>
               </TouchableOpacity>
 
-              <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }} onPress={VisitFiles}>
-                <Text style={{ color: 'blue' }}>View Files</Text>
+              <TouchableOpacity style={{ padding: 8 }} onPress={VisitFiles}>
+                <View style={{
+                  backgroundColor: 'royalblue', flexDirection: 'column', justifyContent: 'space-evenly',
+                  alignItems: 'center'
+                }}>
+                  <Image
+                    source={require('../../images/view.png')}
+                    style={{ width: 25, height: 25 }}
+                  />
+                  <Text style={{ color: 'white', marginTop: 5 }}>View Files</Text>
+                </View>
               </TouchableOpacity>
 
             </View>

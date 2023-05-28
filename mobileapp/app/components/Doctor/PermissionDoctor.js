@@ -30,6 +30,8 @@ const PermissionDoctor = () => {
     getElements();
   }, [type])
 
+  
+
   React.useEffect(() => {
     counter = 0;
 
@@ -58,6 +60,15 @@ const PermissionDoctor = () => {
     setElements([])
     setCheckArr([])
     setSelected(false)
+
+    navigation.setOptions({
+      tabBarStyle: { 
+        display: 'flex',
+        backgroundColor: 'royalblue',
+        height: 65,
+       }
+
+    })
 
     const doctorid = await AsyncStorage.getItem("addressid");
 
@@ -190,6 +201,26 @@ const PermissionDoctor = () => {
     }
     setSelected(find)
 
+    if(find){
+      navigation.setOptions({
+        tabBarStyle: { 
+          display: 'none'
+         }
+      })
+    }
+
+    else{
+      navigation.setOptions({
+        tabBarStyle: { 
+          display: 'flex',
+          backgroundColor: 'royalblue',
+          height: 65,
+         }
+
+      })
+
+    }
+
     console.log("Index: ", checkarr)
   }
 
@@ -243,8 +274,6 @@ const PermissionDoctor = () => {
           style={{ height: '100%' }}>
           <ScrollView
             style={{ marginTop: 10 }}>
-
-
 
             <View style={{
               flex: 1,
@@ -540,11 +569,23 @@ const PermissionDoctor = () => {
           </ScrollView>
           {selected &&
             <View style={{
-              height: 40, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly',
+              height: 65, backgroundColor: 'royalblue', flexDirection: 'row', justifyContent: 'space-evenly',
               alignItems: 'center'
             }}>
-              <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }} onPress={VisitFiles}>
-                <Text style={{ color: 'blue' }}>View Files</Text>
+              <TouchableOpacity style={{ padding: 8 }} onPress={VisitFiles}>
+                <View style={{
+                  backgroundColor: 'royalblue', flexDirection: 'column', justifyContent: 'space-evenly',
+                  alignItems: 'center'
+                }}>
+                  <Image
+                    source={require('../../images/view.png')}
+                    style={{
+                      width: 25,
+                      height: 25
+                    }}
+                  />
+                  <Text style={{ color: 'white', marginTop: 5 }}>View Files</Text>
+                </View>
               </TouchableOpacity>
 
             </View>

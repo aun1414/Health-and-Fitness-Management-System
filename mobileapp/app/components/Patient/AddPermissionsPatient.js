@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { useContext }  from 'react';
 import { TextInput, ActivityIndicator, ScrollView, Image, View, StyleSheet, ImageBackground, BackHandler, TouchableOpacity } from 'react-native';
 import { Text, Button, Provider, Portal, Modal, RadioButton } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { HTTP_CLIENT_URL } from '../../url';
-
-
-
+import AppContext from './AppContext';
 
 const AddPermissionsPatient = () => {
 
@@ -16,6 +14,7 @@ const AddPermissionsPatient = () => {
   const [elements, setElements] = React.useState([]);
   const [tempelements, setTempElements] = React.useState([]);
   const [search, setSearch] = React.useState("")
+  const { hideTabs, toggleTabBarVisibility } = useContext(AppContext);
 
 
   const [visibleMenu, setVisibleMenu] = React.useState(false);
@@ -65,6 +64,8 @@ const AddPermissionsPatient = () => {
     setLoading(true)
     setElements([])
     setCheckArr([])
+
+    toggleTabBarVisibility(false);
 
     const patientid = await AsyncStorage.getItem("addressid");
 
@@ -179,6 +180,16 @@ const AddPermissionsPatient = () => {
 
     }
     setSelected(find)
+
+    if(find){
+      toggleTabBarVisibility(true);
+    }
+    else{
+      toggleTabBarVisibility(false);
+    }
+
+    
+
 
     console.log("Index: ", checkarr)
   }
@@ -339,6 +350,10 @@ const AddPermissionsPatient = () => {
 
 
               </View>
+            </View>
+
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 10 }}>
+              {loading && <ActivityIndicator color={"#fff"} />}
             </View>
 
             <View
@@ -551,20 +566,36 @@ const AddPermissionsPatient = () => {
 
 
             </Grid>
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 10 }}>
-              {loading && <ActivityIndicator color={"#fff"} />}
-            </View>
+
           </ScrollView>
           {selected &&
             <View style={{
-              height: 40, backgroundColor: 'white', flexDirection: 'row', justifyContent: 'space-evenly',
+              height: 65, backgroundColor: 'royalblue', flexDirection: 'row', justifyContent: 'space-evenly',
               alignItems: 'center'
             }}>
-              <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }} onPress={grantAccess}>
-                <Text style={{ color: 'blue' }}>Grant Access</Text>
+              <TouchableOpacity style={{ padding: 8 }} onPress={grantAccess}>
+                <View style={{
+                  backgroundColor: 'royalblue', flexDirection: 'column', justifyContent: 'space-evenly',
+                  alignItems: 'center'
+                }}>
+                  <Image
+                    source={require('../../images/grant.png')}
+                    style={{ width: 25, height: 25 }}
+                  />
+                  <Text style={{ color: 'white', marginTop: 5 }}>Grant Access</Text>
+                </View>
               </TouchableOpacity>
-              <TouchableOpacity style={{ borderColor: 'blue', borderWidth: 2, padding: 8 }} onPress={VisitFiles}>
-                <Text style={{ color: 'blue' }}>View Files</Text>
+              <TouchableOpacity style={{ padding: 8 }} onPress={VisitFiles}>
+                <View style={{
+                  backgroundColor: 'royalblue', flexDirection: 'column', justifyContent: 'space-evenly',
+                  alignItems: 'center'
+                }}>
+                  <Image
+                    source={require('../../images/view.png')}
+                    style={{ width: 25, height: 25 }}
+                  />
+                  <Text style={{ color: 'white', marginTop: 5 }}>View Files</Text>
+                </View>
               </TouchableOpacity>
 
             </View>

@@ -23,7 +23,7 @@ const PaginationPatient = ({data, scrollX}) => {
 
         const backgroundColor = scrollX.interpolate({
           inputRange,
-          outputRange: ['skyblue', 'blue', 'skyblue'],
+          outputRange: ['lightgray', 'white', 'lightgray'],
           extrapolate: 'clamp',
         });
 
@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
     height: 12,
     borderRadius: 6,
     marginHorizontal: 3,
-    backgroundColor: 'skyblue',
+    backgroundColor: 'lightgray',
   },
   dotActive: {
-    backgroundColor: 'blue',
+    backgroundColor: 'white',
   },
 });

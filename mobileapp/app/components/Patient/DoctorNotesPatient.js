@@ -121,8 +121,8 @@ const DoctorNotesPatient = () => {
 
           </View>
 
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            {loading && <ActivityIndicator color={"#fff"} />}
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 20 }}>
+              {loading && <ActivityIndicator color={"#fff"} />}
           </View>
 
           <Grid

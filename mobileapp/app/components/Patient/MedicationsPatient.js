@@ -119,9 +119,9 @@ const MedicationsPatient = () => {
               onChangeText={changed} />
           </View>
 
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 20 }}>
               {loading && <ActivityIndicator color={"#fff"} />}
-            </View>
+          </View>
 
 
           <Grid style={{ marginTop: 30, marginHorizontal: 10 }}>

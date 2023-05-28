@@ -279,9 +279,6 @@ const Temperature = () => {
               fitAuthorized == "Authorized" &&
               <View>
                 
-               
-                {loading && <ActivityIndicator color={"#fff"} style={{marginBottom: 5}} />}
-
                 <TouchableOpacity
                   onPress={() => setOpen(true)}>
                   <TextInput
@@ -386,10 +383,16 @@ const Temperature = () => {
 
               </View>
 
-
             }
 
           </View>
+
+          {
+            loading &&
+            <View style={{ flex: 1, justifyContent: 'flex-end', marginBottom: 40}}>
+              <ActivityIndicator color={"#fff"} size={30} />
+            </View>
+          }
 
 
         </ImageBackground>

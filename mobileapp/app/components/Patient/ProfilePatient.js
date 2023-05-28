@@ -572,7 +572,7 @@ const ProfilePatient = () => {
               <RadioButton.Item label="AB+" value="AB+" />
               <RadioButton.Item label="O+" value="O+" />
               <RadioButton.Item label="A-" value="A-" />
-              <RadioButton.Item label="B+" value="B-" />
+              <RadioButton.Item label="B-" value="B-" />
               <RadioButton.Item label="AB-" value="AB-" />
               <RadioButton.Item label="O-" value="O-" />
 

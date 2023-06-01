@@ -3,77 +3,94 @@ const { sendError } = require('../utils/helper');
 const PRE = require('recrypt-js');
 const Patient = require('../models/patient');
 const PatientProfile = require('../models/patientprofile')
-const counter= require('../counter')
-const Web3=require('web3')
+const counter = require('../counter')
+const Web3 = require('web3')
 
 //create a new patient in database
 exports.createPatient = async (req, res) => {
 
     const { name, email, password } = req.body
 
-    var addressid=""
+    var addressid = ""
 
-    const patient = await Patient.findOne({email});
 
-    //check if email is not already registered
-    if (patient) {
-       return sendError(res, "This email is already registered");
+
+    if (!name.trim()) {
+        return sendError(res, "Name is required");
     }
-   
+    else if (!email.trim()){
+        return sendError(res, "Email is required");
+    }
+    else if (!password.trim()){
+        return sendError(res, "Password is required");        
+    }
+    else if (password.length < 6){
+        return sendError(res, "Password Length should be atleast 6 characters");        
+    }
+
     else {
-        if (typeof web3 !== 'undefined') {
-            var web3 = new Web3(web3.currentProvider); 
-        } else {
-            var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+        const patient = await Patient.findOne({ email });
+
+        //check if email is not already registered
+        if (patient) {
+            return sendError(res, "This email is already registered");
         }
 
-        //assign an available account from available accounts
-
-        const accounts = await web3.eth.getAccounts()
-       
-        while(global.Counter<accounts.length){
-            
-            addressid=accounts[global.Counter] 
-            console.log(addressid)
-            const doctorfound = await Doctor.findOne({ addressid });
-            const patientfound = await Patient.findOne({ addressid });
-            if(doctorfound){
-                addressid=""
-                global.Counter++;
+        else {
+            if (typeof web3 !== 'undefined') {
+                var web3 = new Web3(web3.currentProvider);
+            } else {
+                var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
             }
-            else if(patientfound){
-                addressid=""
-                global.Counter++;
+
+            //assign an available account from available accounts
+
+            const accounts = await web3.eth.getAccounts()
+
+            while (global.Counter < accounts.length) {
+
+                addressid = accounts[global.Counter]
+                console.log(addressid)
+                const doctorfound = await Doctor.findOne({ addressid });
+                const patientfound = await Patient.findOne({ addressid });
+                if (doctorfound) {
+                    addressid = ""
+                    global.Counter++;
+                }
+                else if (patientfound) {
+                    addressid = ""
+                    global.Counter++;
+                }
+                else {
+                    break;
+                }
+
+
             }
-            else{
-                break;
+            if (addressid == "") {
+                res.status(200).json({ success: false, error: "No accounts left" })
+
             }
-            
+            else {
+                var kp_A = PRE.Proxy.generate_key_pair();
+                var privatekey = PRE.Proxy.to_hex(kp_A.get_private_key().to_bytes());
+                var publickey = PRE.Proxy.to_hex(kp_A.get_public_key().to_bytes());
+                const newPatient = new Patient({
+                    name,
+                    email,
+                    addressid,
+                    password,
+                    publickey
+                })
 
-        }
-        if(addressid==""){
-            res.status(200).json({success: false, error:"No accounts left" })
+                await newPatient.save();
+                const patientProfile = new PatientProfile({
+                    patient: newPatient
+                })
+                await patientProfile.save();
 
-        }
-        else{
-            var kp_A = PRE.Proxy.generate_key_pair();
-            var privatekey = PRE.Proxy.to_hex(kp_A.get_private_key().to_bytes());
-            var publickey = PRE.Proxy.to_hex(kp_A.get_public_key().to_bytes());
-            const newPatient = new Patient({
-                name,
-                email,
-                addressid,
-                password,
-                publickey
-            })
-        
-            await newPatient.save();
-            const patientProfile = new PatientProfile({
-                patient: newPatient
-            })
-            await patientProfile.save();
-
-            res.status(200).json({success: true, patient: newPatient, key: privatekey})
+                res.status(200).json({ success: true, patient: newPatient, key: privatekey })
+            }
         }
     }
 
@@ -83,23 +100,28 @@ exports.createPatient = async (req, res) => {
 exports.signin = async (req, res) => {
     const { email, password } = req.body
 
-    if (!email.trim() || !password.trim()) {
-        return sendError(res, "Email/Password is required");
-
+    if (!email.trim()){
+        return sendError(res, "Email is required");
     }
-    else{
-        const patient = await Patient.findOne({email});
+    else if (!password.trim()){
+        return sendError(res, "Password is required");        
+    }
+    else if (password.length < 6){
+        return sendError(res, "Password Length should be atleast 6 characters");        
+    }
+    else {
+        const patient = await Patient.findOne({ email });
 
-        if(!patient){
+        if (!patient) {
             return sendError(res, "Patient Email not registered");
         }
-        else{
+        else {
             const foundPatient = await patient.comparePassword(password);
-            if(!foundPatient){
-                return sendError(res, "Incorrect Password");
+            if (!foundPatient) {
+                return sendError(res, "Incorrect Email/Password");
             }
-            else{
-                res.json({success: true, patient: {name: patient.name, addressid: patient.addressid, id: patient._id, publickey: patient.publickey}})
+            else {
+                res.json({ success: true, patient: { name: patient.name, addressid: patient.addressid, id: patient._id, publickey: patient.publickey } })
             }
 
         }
@@ -110,24 +132,24 @@ exports.signin = async (req, res) => {
 //get patient from database
 exports.getPatient = async (req, res) => {
 
-    try{
+    try {
 
-    const {addressid} = req.body
+        const { addressid } = req.body
 
-   
 
-        const patient = await Patient.findOne({addressid});
 
-        if(!patient){
+        const patient = await Patient.findOne({ addressid });
+
+        if (!patient) {
             return sendError(res, "Patient id not registered");
         }
-        else{
-            res.json({success: true, patient: {name: patient.name, addressid: patient.addressid, id: patient._id, email: patient.email, publickey: patient.publickey}})
+        else {
+            res.json({ success: true, patient: { name: patient.name, addressid: patient.addressid, id: patient._id, email: patient.email, publickey: patient.publickey } })
         }
     }
     catch (error) {
-        res.json({success: false})
+        res.json({ success: false })
     }
-    
+
 
 }

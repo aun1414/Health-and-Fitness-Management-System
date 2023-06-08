@@ -22,6 +22,9 @@ contract Roles {
     }
 
     function addDoctor(address id, string calldata role) external {
+        if(loginDoctor(id)){
+            revert("Doctor Already Exist");
+        }
         Doctor memory d = Doctor(id);
         doctors.push(d);
         roles[id] = role;
@@ -32,7 +35,7 @@ contract Roles {
         return roles[id];
     }
 
-    function loginDoctor(address id) external view returns (bool) {
+    function loginDoctor(address id) public view returns (bool) {
         uint i;
         for (i = 0; i < doctors.length; i++) {
             Doctor memory d = doctors[i];
@@ -44,6 +47,9 @@ contract Roles {
     }
 
     function addPatient(address id, string calldata role) external {
+        if(loginPatient(id)){
+            revert("Patient Already Exist");
+        }
         Patient memory p = Patient(id);
         patients.push(p);
         roles[id] = role;
@@ -54,7 +60,7 @@ contract Roles {
         return roles[id];
     }
 
-    function loginPatient(address id) external view returns (bool) {
+    function loginPatient(address id) public view returns (bool) {
         uint i;
         for (i = 0; i < patients.length; i++) {
             Patient memory p = patients[i];

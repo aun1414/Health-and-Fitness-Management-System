@@ -50,7 +50,7 @@ exports.createPatient = async (req, res) => {
             while (global.Counter < accounts.length) {
 
                 addressid = accounts[global.Counter]
-                console.log(addressid)
+                // console.log(addressid)
                 const doctorfound = await Doctor.findOne({ addressid });
                 const patientfound = await Patient.findOne({ addressid });
                 if (doctorfound) {

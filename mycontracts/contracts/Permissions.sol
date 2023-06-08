@@ -135,7 +135,7 @@ contract Permissions {
         string memory pHash
     ) external {
         //Origin is the caller of the function
-        require(files[n].patientID == origin); //Caller of function should be the owner of the file
+        require(files[n].patientID == origin, "Not Authorized"); //Caller of function should be the owner of the file
         require(
             stringsEquals(myRoles.returnRole(origin), "Patient"),
             "Not authorized"
@@ -150,7 +150,7 @@ contract Permissions {
 
     //function to revoke permission
     function revokePermission(uint n, address docID, address origin) external {
-        require(files[n].patientID == origin);
+        require(files[n].patientID == origin, "Not Authorized");
         require(
             stringsEquals(myRoles.returnRole(origin), "Patient"),
             "Not authorized"

@@ -102,6 +102,9 @@ module.exports = {
   mocha: {
     // timeout: 100000
   },
+  chai: {
+
+  },
 
   // Configure your compilers
   compilers: {

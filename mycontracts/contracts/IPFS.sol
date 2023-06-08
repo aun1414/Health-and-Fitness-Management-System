@@ -100,25 +100,32 @@ contract IPFS {
 
     //Find the number of the file by its hash
     function getFileNumByID(string memory fileId) public view returns (uint) {
-        uint nil = 0;
+        // uint nil = 0;
         for (uint i = 0; i < fileNum; i++) {
             if (stringsEquals(files[i].fileId, fileId)) {
                 return i;
             }
         }
-        return nil;
+        revert("File doesnot exist");
     }
 
     //All the getters for file attributes
     function getFileID(uint256 number) public view returns (string memory) {
         return files[number].fileId;
+        
     }
 
     function getFileType(uint256 number) public view returns (string memory) {
+        if(stringsEquals(files[number].fileType, '')){
+            revert("File doesnot exist");
+        }
         return files[number].fileType;
     }
 
     function getFileDID(uint256 number) public view returns (address) {
+        if(files[number].doctorID==address(0)){
+            revert("File doesnot exist");
+        }
         return files[number].doctorID;
     }
 

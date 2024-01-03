@@ -1,5 +1,5 @@
 # MedChain
-A mobile application built to store patient health records using blockchain, IPFS and React Native
+A decentralized mobile application built to store patient health records using blockchain, IPFS and React Native
 
 
 |  |   | |

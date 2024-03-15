@@ -2,6 +2,9 @@
 A decentralized mobile application built to store patient health records using blockchain, IPFS and React Native
 
 
+![MedChain](https://github.com/aun1414/Health-and-Fitness-Management-System/assets/106032365/f638597a-b359-47ba-9033-06618707c119)
+
+
 |  |   | |
 | --- | --- | --- |
 | ![](./ss/mainpage.png)  |  ![](./ss/MainPatient.png) | ![](./ss/MainDoctor.png) |
